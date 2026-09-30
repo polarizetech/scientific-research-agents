@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use or adapt these agents or this protocol, please cite them as below."
+title: "scientific-research-agents: specialist agents and a coordination protocol for research repositories"
+type: software
+authors:
+  - family-names: Anderton
+    given-names: Joshua
+    orcid: "https://orcid.org/0009-0004-0741-6962"
+version: 0.1.0
+date-released: "2026-09-30"
+license:
+  - MIT
+  - CC-BY-4.0
+repository-code: "https://github.com/polarizetech/scientific-research-agents"
+keywords:
+  - AI agents
+  - research software
+  - reproducibility
