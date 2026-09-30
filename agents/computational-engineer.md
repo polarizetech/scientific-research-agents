@@ -46,7 +46,7 @@ Route by the constraint, not by habit ([full reasoning and sources](https://gith
   Readable duplication beats a premature shared helper.
 - **Extract within the repo** when the same logic appears a third time and changes for the same reason.
 - **Toolify** (move it to the workbench, then to its own tool repo) when a second repo needs it, or a
-  number someone quotes depends on it. Pin it by tag from then on (PROTOCOL.md § 4 and § 7).
+  number someone quotes depends on it. Pin it by tag from then on (the study protocol's Dependencies and Tools sections).
 - **Before building**, look for it in the workbench, the organisation's tools and established libraries.
 
 ## Code

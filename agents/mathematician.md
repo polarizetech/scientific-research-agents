@@ -45,8 +45,9 @@ A calculator is the tested code for one piece of maths, in the study's `calculat
 - `reference.csv`: the reference values as a plain table of inputs and expected outputs; tests run every
   row. Plain CSV, not spreadsheets, so changes are visible in review.
 
-When a calculator claims to predict something measurable, the prediction is written down and tagged
-before the comparison with measured data is made, following `.agents/protocols/PREREG_PROTOCOL.md`.
+When a calculator claims to predict something measurable, the prediction is written down in
+`calculators/<slug>/preregistrations/<EID>/` and tagged before the comparison with measured data is made,
+following `.agents/protocols/PREREG_PROTOCOL.md`.
 
 You write the maths, the reference table and a first implementation. Hand the code to the
 `computational-engineer` when it needs performance, packaging, or integration with a sim or tool. When a

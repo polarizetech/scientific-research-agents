@@ -21,7 +21,7 @@ The design system is {{design_system}}. It is the source of reusable components,
 ## Which kind of app
 
 - **Exploratory apps** (a study's `apps/vN-*`) stay zero-build: `index.html`, `app.js`, `app.css` and
-  `serve.py`, with the design system's stylesheet served through an allow-list (PROTOCOL.md § 5).
+  `serve.py`, with the design system's stylesheet served through an allow-list (the study protocol's Apps section).
 - **React** (shadcn/ui on the design system's theme) is for interfaces that need it: a tool's UI, or an
   app that has outgrown the zero-build form. Say why when you choose it.
 
