@@ -9,9 +9,11 @@ here depends on the scaffold.
 
 ## The agents
 
-Each file in [`agents/`](agents/) is a Claude Code subagent brief, with `{{placeholders}}` the installer
-fills from the repo and its profile. Codex and other assistants read the same briefs through a section of
-`AGENTS.md` ([`templates/AGENTS.block.md`](templates/AGENTS.block.md)).
+Each file in [`agents/`](agents/) is a provider-neutral role brief with Claude Code subagent frontmatter;
+`{{placeholders}}` are filled by the installer from the repo and its profile. Claude discovers installed
+copies in `.claude/agents/`. ChatGPT, Codex and other repository-aware assistants read the same Markdown
+bodies through a section of `AGENTS.md` ([`templates/AGENTS.block.md`](templates/AGENTS.block.md)). If the
+environment cannot or must not create a subagent, the lead applies the relevant brief in its current session.
 
 | agent | takes | starts on |
 |---|---|---|

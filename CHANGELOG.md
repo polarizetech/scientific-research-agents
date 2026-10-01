@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0 (2026-10-01)
+
+- Adds repository-level `AGENTS.md` instructions with `CLAUDE.md` as an import adapter, describes the role
+  briefs as provider-neutral Markdown with Claude frontmatter, and lets ChatGPT/Codex apply a role in the
+  current session when subagents are unavailable or not authorized.
+
 ## v0.1.2 (2026-10-01)
 
 - The coordination protocol points at the kit's scope protocol, part of `prereg` since kit 0.6.0 (`tool-scope`

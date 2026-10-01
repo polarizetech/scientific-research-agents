@@ -1,11 +1,16 @@
+{{repo_rules}}
+
 ## Agents and coordination
 
 Maintained by scientific-research-scaffold from scientific-research-agents (`scaffold update` keeps this section current; edits here are
 replaced). The full rules are the [coordination protocol](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/COORDINATION.md).
 
+## Specialist roles
+
 This repo has specialist roles, each briefed in a file under `.claude/agents/`. Claude Code delegates to
-them as subagents. **Other assistants (Codex and the rest): before a task of one of these kinds, read
-that file and follow it as your brief.**
+them as subagents. **Other assistants (ChatGPT, Codex and the rest): before a task of one of these kinds,
+read that file and follow it as your brief.** When the environment supports and the user has authorized
+subagents, the lead may delegate; otherwise apply the relevant brief in the current session.
 
 {{agent_roster}}
 

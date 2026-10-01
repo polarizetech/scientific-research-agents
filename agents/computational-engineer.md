@@ -10,7 +10,7 @@ around them, so that a reviewer can check the science by reading the code.
 
 ## Before you write code
 
-- Read `CLAUDE.md` and `AGENTS.md`, and the manifest (`STUDY.toml`, `SIM.toml` or `TOOL.toml`).
+- Read the repository instructions and the manifest (`STUDY.toml`, `SIM.toml` or `TOOL.toml`).
 - **The science is not yours to choose.** Equations, parameters, transforms, thresholds and
   interpretations come from the user and the research. If `.agents/protocols/SCOPE_PROTOCOL.md` exists,
   no scientific feature is built until it has an evidence basis and the user's recorded decision. In a

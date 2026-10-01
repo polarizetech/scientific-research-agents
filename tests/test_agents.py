@@ -20,7 +20,7 @@ agents = importlib.util.module_from_spec(_spec)
 _loader.exec_module(agents)
 
 PLACEHOLDERS = {"name", "corpus_repo", "design_system", "conventions", "model", "effort", "agents_ref"}
-BLOCK_PLACEHOLDERS = {"agents_ref", "agent_roster", "codex_routing"}
+BLOCK_PLACEHOLDERS = {"agents_ref", "repo_rules", "agent_roster", "codex_routing"}
 
 
 def frontmatter(path):
@@ -29,6 +29,12 @@ def frontmatter(path):
 
 
 class Briefs(unittest.TestCase):
+    def test_repo_instructions_are_shared_without_dropping_claude(self):
+        self.assertEqual((ROOT / "CLAUDE.md").read_text(), "@AGENTS.md\n")
+        instructions = (ROOT / "AGENTS.md").read_text()
+        self.assertIn("provider-neutral role brief", instructions)
+        self.assertIn("Python 3.9+", instructions)
+
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
         self.assertEqual(len(briefs), 8)

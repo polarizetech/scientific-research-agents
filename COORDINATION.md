@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # Coordinating agents
 
-How the specialist agents in a repo work together, in parallel where that helps, without spending tokens
-on each other. It applies to Claude Code and to Codex; where they differ, it says so.
+How the specialist roles in a repo work together, in parallel where that helps, without spending tokens
+on each other. It applies to Claude Code, ChatGPT and Codex; where they differ, it says so.
 
 ## What costs tokens
 
@@ -22,7 +22,9 @@ numbers rather than assumed.
 ## Who does what
 
 One **lead** (the session the person talks to) plans, delegates and integrates. It keeps general work
-(planning, small edits, git) and hands everything else to a specialist in `.claude/agents/`:
+(planning, small edits, git) and hands everything else to a specialist in `.claude/agents/`. In an
+environment without available or user-authorized subagents, the lead instead reads the matching brief and
+applies that role in the current session:
 
 | agent | takes |
 |---|---|
@@ -96,10 +98,10 @@ effort). It escalates by re-running a task with a stronger model when:
 Escalate one task, not the session. Changing model mid-conversation discards the prompt cache, which
 is model-specific, so escalate by delegating the task afresh rather than switching models partway.
 
-**Codex.** Codex reads `AGENTS.md`, where the scaffold keeps a section pointing at the same agent files
-as role briefs. Route with reasoning effort: low for the scout's kind of work, medium by default, high or
-xhigh on the same escalation signals. The profile names the default model, and an escalation model if
-there is one.
+**ChatGPT and Codex.** Repository-aware sessions read `AGENTS.md`, where the scaffold keeps a section
+pointing at the same agent files as role briefs. Route with reasoning effort: low for the scout's kind of
+work, medium by default, and a higher effort supported by the selected model on the same escalation
+signals. The profile may name a default model and an escalation model.
 
 **Local models** (Ollama). Neither Claude Code nor Codex's own agents should be expected to run well on a
 small local model, and on a 16 GB laptop the measured sweet spot is around 4 billion parameters: good
