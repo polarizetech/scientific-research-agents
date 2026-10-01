@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2 (2026-10-01)
+
+- The coordination protocol points at the kit's scope protocol, part of `prereg` since kit 0.6.0 (`tool-scope`
+  is retired), and says a tool's override experiments are preregistered in the research corpus.
+
 ## v0.1.1 (2026-09-30)
 
 - Briefs follow the scaffold's work types: a dataset is referenced in `datasets/<slug>/DATASET.toml`, and

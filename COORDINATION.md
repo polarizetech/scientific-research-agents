@@ -55,8 +55,9 @@ words, the task was too big for one agent.
 Some work has to happen in sequence:
 
 - **A scientific feature:** `researcher` (what is known, and its tier), then **the person's decision**,
-  then `computational-engineer`. Where the preregistration kit's `tool-scope` module is installed, its
-  protocol governs this step.
+  then `computational-engineer`. The preregistration kit's scope protocol
+  (`.agents/protocols/SCOPE_PROTOCOL.md`, part of `prereg` since kit 0.6.0) governs this step: every unit starts
+  with a claim. In a tool repository, an override's experiment is preregistered in the research corpus.
 - **An interface:** `designer` (a mockup on the design system), then `frontend-developer`.
 - **A result:** `analyst` (numbers, with their uncertainty), then `science-writer`.
 
