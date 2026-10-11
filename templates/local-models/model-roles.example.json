@@ -1,0 +1,45 @@
+{
+  "_comment": [
+    "Roles for local models served by Ollama: which installed model does which job, under a name people",
+    "can pick. Copy it, and set each base_model_id to a tag that `ollama list` shows on that machine;",
+    "installed tags are machine-specific, so keep the copy out of git.",
+    "The fields are the ones Open WebUI's workspace models take (id, base_model_id, name, description,",
+    "an optional system prompt), so a script can create one named model per entry. Raw tags listed in",
+    "hide_base_ids are hidden from the model picker, leaving only the named roles.",
+    "The models named here are examples of each role's size and kind, not requirements. See",
+    "COORDINATION.md, Local models, for what a small local model is and isn't good for."
+  ],
+  "hide_base_ids": [
+    "bge-m3:latest",
+    "llama3.2:3b",
+    "qwen3:4b-instruct-2507-q4_K_M",
+    "qwen3:4b",
+    "research-qwen:latest"
+  ],
+  "models": [
+    {
+      "id": "research",
+      "base_model_id": "research-qwen:latest",
+      "name": "Research assistant",
+      "description": "For research chats. A build of the base model with the organisation's research constraints and tool-use instructions as its system prompt (an Ollama Modelfile), so no extra system prompt is applied here.",
+      "system_prompt_file": null
+    },
+    {
+      "id": "fast",
+      "base_model_id": "qwen3:4b-instruct-2507-q4_K_M",
+      "name": "Fast chat (default)",
+      "description": "The low-latency default: an instruct model of about 4 billion parameters that answers without a reasoning pass. For everyday chat, routing and tool calls.",
+      "system_prompt_file": null
+    },
+    {
+      "id": "deep",
+      "base_model_id": "qwen3:4b",
+      "name": "Deep reasoning (slow)",
+      "description": "The same size of model with its reasoning pass on: it reasons at length before every reply or tool call, so it is many times slower. For hard reasoning where latency doesn't matter; not for tool-heavy work.",
+      "system_prompt_file": null
+    }
+  ],
+  "embedding_model_id": "bge-m3:latest",
+  "default_model_id": "fast",
+  "pinned_model_ids": ["research", "fast", "deep"]
+}

@@ -51,6 +51,16 @@ class Briefs(unittest.TestCase):
         block = (ROOT / "templates" / "AGENTS.block.md").read_text()
         self.assertLessEqual(set(re.findall(r"\{\{(\w+)\}\}", block)), BLOCK_PLACEHOLDERS)
 
+    def test_local_model_roles_template(self):
+        roles = json.loads((ROOT / "templates" / "local-models" / "model-roles.example.json").read_text())
+        ids = [m["id"] for m in roles["models"]]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertIn(roles["default_model_id"], ids)
+        self.assertLessEqual(set(roles["pinned_model_ids"]), set(ids))
+        for m in roles["models"]:
+            self.assertTrue(m["base_model_id"] and m["name"] and m["description"], m["id"])
+            self.assertIn(m["base_model_id"], roles["hide_base_ids"])  # only the named roles show
+
     def test_version_agrees(self):
         version = (ROOT / "VERSION").read_text().strip()
         self.assertIn(f"version: {version}\n", (ROOT / "CITATION.cff").read_text())

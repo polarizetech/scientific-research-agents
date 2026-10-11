@@ -107,7 +107,9 @@ signals. The profile may name a default model and an escalation model.
 small local model, and on a 16 GB laptop the measured sweet spot is around 4 billion parameters: good
 for routing, embeddings and answering from retrieved text, not for writing code. Use local models inside
 the project's own tools for narrow jobs, and for anything confidential that may not leave the machine.
-Their cost is memory and speed, not money.
+Their cost is memory and speed, not money. [`templates/local-models/model-roles.example.json`](templates/local-models/model-roles.example.json)
+is a starting set of roles (a research model, a fast default, a slow reasoning one, an embedding model) to
+copy and point at the models installed on a machine.
 
 ## Keeping sessions cheap
 

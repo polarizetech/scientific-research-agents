@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.0 (2026-10-11)
+
+- Adds `templates/local-models/model-roles.example.json`: named roles for local models served by Ollama (a
+  research model, a fast default, a slow reasoning one, an embedding model), in the fields Open WebUI's
+  workspace models take. The coordination protocol's section on local models points to it. Nothing installs
+  it; it is a file to copy.
+
 ## v0.2.0 (2026-10-01)
 
 - Adds repository-level `AGENTS.md` instructions with `CLAUDE.md` as an import adapter, describes the role
