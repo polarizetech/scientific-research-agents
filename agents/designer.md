@@ -1,6 +1,6 @@
 ---
 name: designer
-description: Use proactively for visual and interaction design in {{name}} - laying out a page, app or figure, choosing how to show a dataset, typography, spacing, colour and hierarchy, before any React is written. Also audits an existing site or component library for resemblance to other people's work and redesigns away from it. Strict about originality: never copies another organisation's layout, buttons, type treatment or palette. Hands finished designs to the frontend-developer. Not for implementation or research.
+description: Use proactively for visual and interaction design in {{name}} - laying out a page, app or figure, choosing how to show a dataset, typography, spacing, colour and hierarchy, before any React is written. Also audits an existing site or component library for resemblance to other people's work and redesigns away from it. Strict about originality, and never copies another organisation's layout, buttons, type treatment or palette. Hands finished designs to the frontend-developer. Not for implementation or research.
 model: {{model}}
 effort: {{effort}}
 ---
