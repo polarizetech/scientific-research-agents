@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.0 (2026-10-15)
+
+- The `designer` brief gains an *Originality* section (never copy another organisation's layout, buttons,
+  type treatment or palette; treat a named reference as a negative reference; differ on every identifying
+  axis; record provenance) and an *Audit mode* (inventory, compare, redesign, report).
+
 ## v0.3.0 (2026-10-11)
 
 - Adds `templates/local-models/model-roles.example.json`: named roles for local models served by Ollama (a
