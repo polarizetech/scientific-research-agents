@@ -25,10 +25,27 @@ environment cannot or must not create a subagent, the lead applies the relevant 
 | `researcher` | literature and evidence, evidence tiers, claims in the research corpus | sonnet, medium |
 | `analyst` | data analysis and statistics, preregistered analysis plans | sonnet, high |
 | `science-writer` | papers, and blog posts as a separate register | sonnet, medium |
+| `auditory-evoked-potentials` | first-priority AEP and exteroceptive-audio pathway research, including ABR, ASSR, FFR, MMN, binaural hearing, neurophonic potentials and neural stimulus design | profile-selected |
 
 **One agent per role, not per discipline.** Research, analysis and writing are different jobs; neuroscience
 and cardiology mostly are not. The science roles read discipline briefs from [`disciplines/`](disciplines/):
 what is established in each field, its standards and its traps.
+
+The narrowly scoped [`auditory-evoked-potentials`](agents/auditory-evoked-potentials.md) expert is the one
+exception: auditory pathway tracing and stimulus design require a shared, evidence-addressed knowledge
+contract across research, analysis and simulation work. It wins routing ties for its stated auditory scope,
+but explicitly declines general audio engineering, music production, transcription, and non-auditory work.
+It is associated with the
+[`audio-evoked-potentials`](https://github.com/polarizetech/audio-evoked-potentials) simulator project and
+the AEP study beneath the configured research corpus.
+
+### Updating the AEP grounding table
+
+Retrieve the affected passages through the configured scientific-research RAG server, preserve evidence
+IDs verbatim, and run its citation checker over the final claim list. The checker validates quotations and
+numbers, not entailment, so review the inference yourself. Every row keeps a status and read depth; a new or
+unverified claim is `Background` until retrieved. Update the focused contract test in
+`tests/test_agents.py` whenever an evidence ID or required routing example changes.
 
 **The science stays the person's.** Infrastructure is the agent's to decide; equations, parameters and
 interpretations come from the person and the research. No agent states a published value from memory.

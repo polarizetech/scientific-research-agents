@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.0 (2026-10-16)
+
+- Adds a first-priority Auditory Evoked Potentials specialist profile with explicit routing boundaries,
+  stage-by-stage tracing, stimulus-design and dissociation protocols, a supplied evidence-addressed
+  grounding table, safety and interpretation limits, and positive/negative routing controls.
+- Documents how to update the AEP grounding table and links the profile to the reusable AEP simulator
+  project. The existing auditory-electrophysiology discipline brief now routes narrow AEP work to it.
+
 ## v0.4.0 (2026-10-15)
 
 - The `designer` brief gains an *Originality* section (never copy another organisation's layout, buttons,
