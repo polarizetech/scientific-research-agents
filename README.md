@@ -26,8 +26,8 @@ environment cannot or must not create a subagent, the lead applies the relevant 
 | `scout` | finding and summarising, read-only, so other agents don't read everything themselves | haiku, low |
 | `computational-engineer` | simulators, models, numerical code, pipelines; language choice, typing, reuse vs duplication | sonnet, high |
 | `mathematician` | equations, constants, units and valid ranges; specifies calculators with reference values | sonnet, high |
-| `designer` | layout and visual design on the design system; how to show a dataset | sonnet, medium |
-| `frontend-developer` | React and shadcn/ui interfaces built from the designer's mockups | sonnet, medium |
+| `designer` | layout and visual design on the configured component library; how to show a dataset | sonnet, medium |
+| `frontend-developer` | zero-build, Python-served apps by default; React when justified, always from the configured design system | sonnet, medium |
 | `researcher` | literature and evidence, evidence tiers, claims in the research corpus | sonnet, medium |
 | `analyst` | data analysis and statistics, preregistered analysis plans | sonnet, high |
 | `science-writer` | papers, and blog posts as a separate register | sonnet, medium |
@@ -71,6 +71,11 @@ clear signal.
 
 [`references/language-routing.md`](references/language-routing.md) is the evidence behind the engineer's
 rule for choosing a language.
+
+[`references/app-architecture.md`](references/app-architecture.md) standardizes interfaces: the configured
+design system (Polarize installations use `polarizetech/polarize-ui`), a zero-build browser app and Python
+`serve.py` by default, allow-listed shared assets, and an explicit handoff to the computational engineer for
+non-trivial APIs.
 
 ## What it costs
 

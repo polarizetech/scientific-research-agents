@@ -58,6 +58,39 @@ class Briefs(unittest.TestCase):
             self.assertIn("checkout", text)
             self.assertIn("without authorization", text)
 
+    def test_interface_profiles_share_design_and_app_architecture(self):
+        designer = (ROOT / "agents" / "designer.md").read_text()
+        frontend = (ROOT / "agents" / "frontend-developer.md").read_text()
+        engineer = (ROOT / "agents" / "computational-engineer.md").read_text()
+        reference = (ROOT / "references" / "app-architecture.md").read_text()
+
+        for text in (designer, frontend, engineer, reference):
+            self.assertIn("polarizetech/polarize-ui", text)
+            self.assertIn("{{design_system}}", text)
+        for text in (designer, frontend, engineer):
+            self.assertIn("app-architecture.md", text)
+
+        for text in (designer, frontend, reference):
+            self.assertIn("pinned release", text)
+            self.assertIn("design-system", text)
+
+        for text in (frontend, engineer, reference):
+            self.assertIn("serve.py", text)
+            self.assertIn("ThreadingHTTPServer", text)
+            self.assertIn("index.html", text)
+            self.assertIn("app.js", text)
+            self.assertIn("app.css", text)
+            self.assertIn("/api/", text)
+
+        self.assertIn("allow-list", frontend)
+        self.assertIn("never mount", frontend)
+        self.assertIn("FastAPI", frontend)
+        self.assertIn("FastAPI", engineer)
+        self.assertIn("Record that reason", reference)
+        self.assertIn("audio-evoked-potentials/apps/tuning-forks", reference)
+        self.assertIn("matched-entropy-demodulation/apps/v15-visual-cortex", reference)
+        self.assertIn("world-seeding/apps/primary-elements/v1", reference)
+
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
         self.assertEqual(len(briefs), 11)

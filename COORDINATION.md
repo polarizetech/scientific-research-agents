@@ -76,7 +76,9 @@ Some work has to happen in sequence:
   then `computational-engineer`. The preregistration kit's scope protocol
   (`.agents/protocols/SCOPE_PROTOCOL.md`, part of `prereg` since kit 0.6.0) governs this step: every unit starts
   with a claim. In a tool repository, an override's experiment is preregistered in the research corpus.
-- **An interface:** `designer` (a mockup on the design system), then `frontend-developer`.
+- **An interface:** `designer` (a mockup using the pinned design-system components), then
+  `frontend-developer` (the standard Python-served app shell). If it needs a non-trivial API, the
+  `computational-engineer` owns the Python backend after agreeing the JSON contract with the frontend.
 - **A result:** `analyst` (numbers, with their uncertainty), then `science-writer`.
 
 No amount of parallelism skips the person's decision on a scientific feature.

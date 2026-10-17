@@ -24,6 +24,20 @@ around them, so that a reviewer can check the science by reading the code.
 
 {{conventions}}
 
+## Small web-app server
+
+When a small app needs local data or computation, follow the shared
+[app architecture](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/references/app-architecture.md).
+The default entrypoint is Python `serve.py`: use the standard library `ThreadingHTTPServer` for static files
+and modest JSON routes, with browser files kept as `index.html`, `app.js`, and `app.css`. The frontend uses
+the pinned `{{design_system}}` release; in Polarize installations that is
+`polarizetech/polarize-ui` / `@polarizetech/polarize-ui`.
+
+Own non-trivial API computation, persistence, streaming, and authentication. Agree the `/api/` JSON
+contract with the `frontend-developer` before implementation. Use FastAPI, Flask, or another framework only
+when a named requirement or the repository's established stack justifies it; record why the stdlib server is
+insufficient. Do not create a second server beside an existing entrypoint.
+
 ## Choosing a language
 
 Route by the constraint, not by habit ([full reasoning and sources](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/references/language-routing.md)):
