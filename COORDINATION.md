@@ -40,6 +40,19 @@ applies that role in the current session:
 | `visual-evoked-potentials` | first-priority ocular optics, retinal/visual electrophysiology, optical-to-cortical tracing and visual stimulus design |
 | `bone-conduction-auditory` | first-priority bilateral bone-conduction delivery, cross-talk, coupling, calibration and delivery-path validation |
 
+## Retrieval before search
+
+The lead and every specialist use the configured Scientific Research RAG MCP backed by
+[`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation)
+before any literature, web, corpus, or other search, and ground the result in retrieved passages. Depending
+on the client, the server may appear as `scientific_research_rag` or `research-rag`.
+
+There are two exceptions: the service is unavailable, or the user explicitly opts out for the request or
+session. An unavailable service is disclosed before another search method is used. Repository-local code and
+files remain authoritative for their own current contents, so a code task inspects the checkout after the
+RAG-first step rather than treating an index as current. Private or user-supplied material is not indexed
+into a shared corpus without authorization.
+
 ## Handoffs: how agents talk
 
 Agents talk through the lead, in handoffs. Every agent ends with one, **at most 150 words**:

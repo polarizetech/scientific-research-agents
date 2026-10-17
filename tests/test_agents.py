@@ -35,6 +35,29 @@ class Briefs(unittest.TestCase):
         self.assertIn("provider-neutral role brief", instructions)
         self.assertIn("Python 3.9+", instructions)
 
+    def test_every_agent_inherits_retrieval_before_search(self):
+        expected = (
+            "polarizetech/retrieval-augmented-generation",
+            "before any literature, web, corpus, or other search",
+            "service is unavailable",
+            "user explicitly",
+            "Local filesystem" ,
+        )
+        instructions = (ROOT / "AGENTS.md").read_text()
+        for phrase in expected:
+            self.assertIn(phrase, instructions)
+
+        template = (ROOT / "templates" / "AGENTS.block.md").read_text()
+        coordination = (ROOT / "COORDINATION.md").read_text()
+        for text in (template, coordination):
+            self.assertIn("polarizetech/retrieval-augmented-generation", text)
+            self.assertIn("scientific_research_rag", text)
+            self.assertIn("research-rag", text)
+            self.assertIn("unavailable", text)
+            self.assertIn("explicitly opts out", text)
+            self.assertIn("checkout", text)
+            self.assertIn("without authorization", text)
+
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
         self.assertEqual(len(briefs), 11)

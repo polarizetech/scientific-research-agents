@@ -3,6 +3,12 @@
 Specialist AI agents for scientific research repositories, and the protocol they coordinate by: who
 does what, how they hand work to each other, which model each starts on, and what it all costs.
 
+All leads and specialist agents search through the configured Scientific Research RAG MCP first, backed by
+[`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation),
+unless it is unavailable or the user explicitly opts out. They disclose an unavailable service before using
+another search method. For a repository's own current code, the checkout remains authoritative and is
+inspected directly after the RAG-first step.
+
 It is used by [scientific-research-scaffold](https://github.com/polarizetech/scientific-research-scaffold),
 which installs these agents into every study, sim and tool it makes and keeps them current, but nothing
 here depends on the scaffold.

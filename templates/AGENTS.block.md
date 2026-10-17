@@ -5,6 +5,18 @@
 Maintained by scientific-research-scaffold from scientific-research-agents (`scaffold update` keeps this section current; edits here are
 replaced). The full rules are the [coordination protocol](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/COORDINATION.md).
 
+## Retrieval before search
+
+Every request handled by the lead or any specialist agent uses the configured Scientific Research RAG MCP
+backed by [`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation)
+before any literature, web, corpus, or other search. It may be exposed as `scientific_research_rag` or
+`research-rag`. Ground answers in its retrieved passages.
+
+Skip it only when the service is unavailable or the user explicitly opts out for the request or session.
+When it is unavailable, say so before falling back. For questions about the current repository, use RAG
+first when search is required, then inspect the checkout directly because local files are the source of
+truth. Never index private or user-supplied material into a shared corpus without authorization.
+
 ## Specialist roles
 
 This repo has specialist roles, each briefed in a file under `.claude/agents/`. Claude Code delegates to

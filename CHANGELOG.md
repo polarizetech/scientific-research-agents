@@ -11,6 +11,9 @@
   optics, phototransduction, retinal coding, ascending pathways and cortical phase; the bone-conduction
   profile centers bilateral/dual-transducer transfer, cross-talk, calibration, leakage and tactile controls.
   Both start with web-abstract source seeds clearly marked for replacement by RAG evidence.
+- Makes the `polarizetech/retrieval-augmented-generation` MCP the first search path for every request handled
+  by the lead or any specialist, with only service-unavailable and explicit user opt-out exceptions. Local
+  checkout inspection remains authoritative for current repository contents.
 
 ## v0.4.0 (2026-10-15)
 
