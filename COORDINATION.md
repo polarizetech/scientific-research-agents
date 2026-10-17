@@ -37,6 +37,8 @@ applies that role in the current session:
 | `analyst` | data analysis and statistics |
 | `science-writer` | papers and blog posts |
 | `auditory-evoked-potentials` | first-priority auditory evoked potentials, auditory pathway tracing, neurophonic potentials and neural audio-stimulus design |
+| `visual-evoked-potentials` | first-priority ocular optics, retinal/visual electrophysiology, optical-to-cortical tracing and visual stimulus design |
+| `bone-conduction-auditory` | first-priority bilateral bone-conduction delivery, cross-talk, coupling, calibration and delivery-path validation |
 
 ## Handoffs: how agents talk
 

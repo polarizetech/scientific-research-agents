@@ -37,7 +37,7 @@ class Briefs(unittest.TestCase):
 
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
-        self.assertEqual(len(briefs), 9)
+        self.assertEqual(len(briefs), 11)
         for f in briefs:
             fields = frontmatter(f)
             self.assertEqual(fields["name"], f.stem)
@@ -106,6 +106,82 @@ class Briefs(unittest.TestCase):
         for required in ("Established", "Supported", "Hypothesis", "Derived", "Background",
                          "abstract", "passages", "full", "square-law", "detuned receiver",
                          "medical electrical-safety", "## Limitations that travel with the claims"):
+            self.assertIn(required, text)
+
+    def test_visual_expert_routing_and_method_contract(self):
+        path = ROOT / "agents" / "visual-evoked-potentials.md"
+        text = path.read_text()
+        fields = frontmatter(path)
+        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
+        description = fields["description"].lower()
+        for term in ("use first", "visual evoked potentials", "refraction", "interference",
+                     "phototransduction", "erg", "vep", "ssvep", "retina", "lgn", "v1",
+                     "phase-sensitive", "wins ties", "not for graphic design", "computer vision"):
+            self.assertIn(term, description)
+
+        positive = (
+            "How does a flickering grating become an SSVEP in visual cortex?",
+            "Does the retina preserve the optical phase of an interference pattern?",
+            "Trace chromatic and luminance information from cones through LGN to cortex.",
+            "How do refraction and ocular aberrations change the retinal signal?",
+            "Design a binocular stimulus that separates retinal from cortical contributions.",
+        )
+        negative = (
+            "Make this dashboard easier to scan.",
+            "Choose a portrait lens for my camera.",
+            "Remove glare from this photograph.",
+            "Train an object-detection model.",
+            "Explain an auditory brainstem response.",
+        )
+        for example in positive + negative:
+            self.assertIn(example, text)
+
+        ordered_stages = ("source and propagation", "tear film", "retinal sampling", "phototransduction",
+                          "outer and inner retinal circuitry", "optic nerve", "retinorecipient targets",
+                          "optic radiations and V1", "extrastriate")
+        start = text.index("## How to trace a visual stimulus")
+        positions = [text.index(stage, start) for stage in ordered_stages]
+        self.assertEqual(positions, sorted(positions))
+        for required in ("**Optical phase:**", "**Stimulus phase:**", "**Cellular phase:**",
+                         "**Population phase:**", "Do not claim that retina or cortex preserves electromagnetic optical phase",
+                         "matched optical-intensity", "generic nonlinearity", "PMID `16779799`",
+                         "PMID `16544207`", "PMID `33913164`", "RAG server was unavailable",
+                         "photobiological and photosensitivity safety", "## Handing back"):
+            self.assertIn(required, text)
+
+    def test_bone_conduction_expert_routing_and_method_contract(self):
+        path = ROOT / "agents" / "bone-conduction-auditory.md"
+        text = path.read_text()
+        fields = frontmatter(path)
+        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
+        description = fields["description"].lower()
+        for term in ("use first", "bilateral", "dual-transducer", "bone-conduction headphones",
+                     "cross-talk", "transfer functions", "air-conducted leakage", "vibrotactile",
+                     "cartilage", "dental", "implantable", "wins ties", "not for ordinary air-conduction"):
+            self.assertIn(term, description)
+
+        positive = (
+            "Can two bone-conduction headphone channels deliver independent left and right signals?",
+            "How should I measure cross-talk between bilateral mastoid transducers?",
+            "Trace a bone-conducted waveform from the actuator to each cochlea.",
+            "Could this response be airborne leakage or a tactile cue rather than bone-conducted hearing?",
+            "How do forehead, mastoid, cartilage, dental, and implanted coupling differ?",
+        )
+        negative = (
+            "EQ these over-ear headphones.",
+            "Mix this podcast at -16 LUFS.",
+            "Which loudspeaker placement fixes my room mode?",
+            "Diagnose my conductive hearing loss.",
+            "Explain calcium signaling in osteoblasts.",
+        )
+        for example in positive + negative:
+            self.assertIn(example, text)
+
+        for required in ("[H_LL  H_RL]", "[H_LR  H_RR]", "two-input, two-cochlea",
+                         "matrix conditioning", "left-to-left", "right-to-right",
+                         "air-conducted leakage", "vibrotactile", "re-seated", "PMID `37156121`",
+                         "PMID `37463528`", "RAG server was unavailable",
+                         "`auditory-evoked-potentials` profile", "## Handing back"):
             self.assertIn(required, text)
 
     def test_only_known_placeholders(self):
