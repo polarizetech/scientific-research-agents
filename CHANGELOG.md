@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.0 (2026-10-18)
+
+- Adds hypothesis-impact ownership to the shared coordination protocol. The agent changing evidence, a finding,
+  or scientific implementation propagates it through the corpus reverse index and runs the scaffold's
+  hypothesis synchronization in affected studies.
+- Researcher, analyst and computational-engineer briefs now carry their specific parts of that workflow.
+  Routine synchronization uses a study's standing impact policy; hypothesis meaning and unrecorded scientific
+  choices still return to the person.
+
 ## v0.5.0 (2026-10-17)
 
 - Adds a first-priority Auditory Evoked Potentials specialist profile with explicit routing boundaries,

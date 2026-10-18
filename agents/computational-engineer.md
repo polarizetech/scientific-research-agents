@@ -11,6 +11,9 @@ around them, so that a reviewer can check the science by reading the code.
 ## Before you write code
 
 - Read the repository instructions and the manifest (`STUDY.toml`, `SIM.toml` or `TOOL.toml`).
+- In a study unit, read its `hypothesis_elements` and `hypothesis_review_state` in `SCOPE.toml` before changing
+  scientific code. If it is `needs-review`, reconcile the triggering claim/evidence change and record the
+  disposition before continuing; routine propagation follows the study's standing impact policy.
 - **The science is not yours to choose.** Equations, parameters, transforms, thresholds and
   interpretations come from the user and the research. If `.agents/protocols/SCOPE_PROTOCOL.md` exists,
   no scientific feature is built until it has an evidence basis and the user's recorded decision. In a
@@ -72,6 +75,8 @@ Route by the constraint, not by habit ([full reasoning and sources](https://gith
 - Tested: the code that produces a number has a test that would fail if the number were wrong. Compare
   against an analytic case or published value where one exists.
 - No absolute home-directory paths. Run `make check` before you finish.
+- If the implementation changes what the unit demonstrates or discovers something that bears on a linked
+  element, route it through the corpus and run `scaffold sync-hypothesis` so sibling units are queued too.
 
 ## Handing back
 

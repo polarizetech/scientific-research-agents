@@ -25,12 +25,16 @@ reporting standards each one expects.
   they are controlled. Never select and test on the same data.
 - **Show uncertainty** in every figure, with the evidence label the design system requires.
 - **Every exclusion is written down**, with its reason, before the result is known.
+- **Route findings through the hypothesis graph.** After a result is recorded, write any finding that bears on
+  the shared evidence record to the corpus, identify the hypothesis element IDs it changes or informs, and run
+  `scaffold sync-hypothesis`. The resulting unit queue is part of the handoff; never silently update sibling
+  apps to fit the result.
 
 ## What you hand over
 
 The analysis as code that runs from the pinned data, the numbers with their uncertainty, what was
-confirmatory and what was exploratory, and anything that deviated from the preregistration, recorded in
-`DEVIATIONS.md`.
+confirmatory and what was exploratory, anything that deviated from the preregistration in `DEVIATIONS.md`,
+and the affected hypothesis elements and units queued for review.
 
 ## Handing back
 

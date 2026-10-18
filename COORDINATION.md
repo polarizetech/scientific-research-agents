@@ -75,13 +75,32 @@ Some work has to happen in sequence:
 - **A scientific feature:** `researcher` (what is known, and its tier), then **the person's decision**,
   then `computational-engineer`. The preregistration kit's scope protocol
   (`.agents/protocols/SCOPE_PROTOCOL.md`, part of `prereg` since kit 0.6.0) governs this step: every unit starts
-  with a claim. In a tool repository, an override's experiment is preregistered in the research corpus.
+  with a claim. A recorded standing delegation (for example a study's `impact_management = "agent-managed"`)
+  covers routine dependency linking, impact queueing and reconciliation; it does not authorize an agent to
+  rewrite the person's hypothesis or falsifier. In a tool repository, an override's experiment is preregistered
+  in the research corpus.
 - **An interface:** `designer` (a mockup using the pinned design-system components), then
   `frontend-developer` (the standard Python-served app shell). If it needs a non-trivial API, the
   `computational-engineer` owns the Python backend after agreeing the JSON contract with the frontend.
 - **A result:** `analyst` (numbers, with their uncertainty), then `science-writer`.
 
 No amount of parallelism skips the person's decision on a scientific feature.
+
+## Hypothesis impacts across units and studies
+
+In a scaffold study, `HYPOTHESIS.toml` is the dependency graph and each unit's `SCOPE.toml` carries its local
+element provenance. The agent making a relevant change owns propagation before handoff:
+
+1. Read the unit's element IDs and review state before changing scientific work.
+2. When a claim, evidence link, finding or element changes, update the corpus project overview and its reverse
+   references from claim/source IDs to study elements, units and experiments.
+3. Run `scaffold sync-hypothesis` in each available affected study. This queues stale units without changing
+   their claims. Record unavailable repos as pending cross-study impacts in the corpus overview.
+4. Do not ask the person to perform routine synchronization. Escalate only when hypothesis meaning, an
+   unrecorded scientific choice, safety, publication scope or an irreversible action requires their decision.
+
+A unit finding follows the same route in reverse: analyst → corpus finding/claim → hypothesis element → all
+linked units and studies. Handoffs name the affected element IDs and queued units under **Next**.
 
 ## Parallel work
 
