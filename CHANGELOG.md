@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.5.0 (2026-10-17)
+
+- Adds a first-priority Auditory Evoked Potentials specialist profile with explicit routing boundaries,
+  stage-by-stage tracing, stimulus-design and dissociation protocols, a supplied evidence-addressed
+  grounding table, safety and interpretation limits, and positive/negative routing controls.
+- Documents how to update the AEP grounding table and links the profile to the reusable AEP simulator
+  project. The existing auditory-electrophysiology discipline brief now routes narrow AEP work to it.
+- Adds first-priority visual-system and bone-conduction expert profiles. The visual profile separates ocular
+  optics, phototransduction, retinal coding, ascending pathways and cortical phase; the bone-conduction
+  profile centers bilateral/dual-transducer transfer, cross-talk, calibration, leakage and tactile controls.
+  Both start with web-abstract source seeds clearly marked for replacement by RAG evidence.
+- Makes the `polarizetech/retrieval-augmented-generation` MCP the first search path for every request handled
+  by the lead or any specialist, with only service-unavailable and explicit user opt-out exceptions. Local
+  checkout inspection remains authoritative for current repository contents.
+- Standardizes design and small-app delivery around the configured design system—
+  `polarizetech/polarize-ui` in Polarize installations—and a zero-build browser app served by Python
+  `serve.py`. Designer, frontend developer, and computational engineer briefs now share the same component,
+  server, API-ownership, and exception rules.
+
 ## v0.4.0 (2026-10-15)
 
 - The `designer` brief gains an *Originality* section (never copy another organisation's layout, buttons,

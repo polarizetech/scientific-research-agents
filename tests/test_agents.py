@@ -35,15 +35,210 @@ class Briefs(unittest.TestCase):
         self.assertIn("provider-neutral role brief", instructions)
         self.assertIn("Python 3.9+", instructions)
 
+    def test_every_agent_inherits_retrieval_before_search(self):
+        expected = (
+            "polarizetech/retrieval-augmented-generation",
+            "before any literature, web, corpus, or other search",
+            "service is unavailable",
+            "user explicitly",
+            "Local filesystem" ,
+        )
+        instructions = (ROOT / "AGENTS.md").read_text()
+        for phrase in expected:
+            self.assertIn(phrase, instructions)
+
+        template = (ROOT / "templates" / "AGENTS.block.md").read_text()
+        coordination = (ROOT / "COORDINATION.md").read_text()
+        for text in (template, coordination):
+            self.assertIn("polarizetech/retrieval-augmented-generation", text)
+            self.assertIn("scientific_research_rag", text)
+            self.assertIn("research-rag", text)
+            self.assertIn("unavailable", text)
+            self.assertIn("explicitly opts out", text)
+            self.assertIn("checkout", text)
+            self.assertIn("without authorization", text)
+
+    def test_interface_profiles_share_design_and_app_architecture(self):
+        designer = (ROOT / "agents" / "designer.md").read_text()
+        frontend = (ROOT / "agents" / "frontend-developer.md").read_text()
+        engineer = (ROOT / "agents" / "computational-engineer.md").read_text()
+        reference = (ROOT / "references" / "app-architecture.md").read_text()
+
+        for text in (designer, frontend, engineer, reference):
+            self.assertIn("polarizetech/polarize-ui", text)
+            self.assertIn("{{design_system}}", text)
+        for text in (designer, frontend, engineer):
+            self.assertIn("app-architecture.md", text)
+
+        for text in (designer, frontend, reference):
+            self.assertIn("pinned release", text)
+            self.assertIn("design-system", text)
+
+        for text in (frontend, engineer, reference):
+            self.assertIn("serve.py", text)
+            self.assertIn("ThreadingHTTPServer", text)
+            self.assertIn("index.html", text)
+            self.assertIn("app.js", text)
+            self.assertIn("app.css", text)
+            self.assertIn("/api/", text)
+
+        self.assertIn("allow-list", frontend)
+        self.assertIn("never mount", frontend)
+        self.assertIn("FastAPI", frontend)
+        self.assertIn("FastAPI", engineer)
+        self.assertIn("Record that reason", reference)
+        self.assertIn("audio-evoked-potentials/apps/tuning-forks", reference)
+        self.assertIn("matched-entropy-demodulation/apps/v15-visual-cortex", reference)
+        self.assertIn("world-seeding/apps/primary-elements/v1", reference)
+
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
-        self.assertEqual(len(briefs), 8)
+        self.assertEqual(len(briefs), 11)
         for f in briefs:
             fields = frontmatter(f)
             self.assertEqual(fields["name"], f.stem)
             self.assertNotIn(": ", fields["description"], f"{f.name}: ': ' breaks YAML frontmatter")
             self.assertEqual((fields["model"], fields["effort"]), ("{{model}}", "{{effort}}"), f.name)
             self.assertIn("Handing back" if f.stem != "scout" else "What you hand back", f.read_text())
+
+    def test_aep_expert_routing_and_grounding_contract(self):
+        path = ROOT / "agents" / "auditory-evoked-potentials.md"
+        text = path.read_text()
+        fields = frontmatter(path)
+        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
+        description = fields["description"].lower()
+        for term in ("use first", "abr", "assr", "ffr", "mmn", "p300", "binaural", "cochlear",
+                     "neurophonic potentials", "auditory crossover", "wins ties",
+                     "not for audio engineering", "music production", "speech-to-text"):
+            self.assertIn(term, description)
+
+        positive = (
+            "What latency is ABR wave V and where is it generated?",
+            "Design a 40 Hz binaural-beat stimulus that produces a cortical ASSR.",
+            "Does a 500 Hz carrier reach cortex as a waveform?",
+            "Where are ITD and ILD computed, and what survives to IC?",
+            "Can a sound reset visual-cortex alpha phase?",
+        )
+        negative = (
+            "Mix this podcast at -16 LUFS.",
+            "Master this song for streaming.",
+            "Transcribe this interview.",
+            "Explain visual steady-state evoked potentials.",
+            "Which microphone should I buy for vocals?",
+        )
+        for example in positive + negative:
+            self.assertIn(example, text)
+
+        self.assertRegex(text, r"low carrier near 400 Hz, not a\s+carrier near 3 kHz")
+        self.assertIn("does **not** reach cortex as a copied 500 Hz waveform", text)
+        self.assertIn("no cortical FFR above about 150 Hz", text)
+        self.assertIn("W3132668373#p35.3485f9f5", text)
+        self.assertIn("W2005066437#p29.cde118db", text)
+
+        evidence_ids = {
+            "W3132093913#p1.84c83136", "W3132093913#p7.1a8911b6",
+            "W2018764702#p4.ec23c0f4", "W2019142244#p0.70984e33",
+            "W2009521233#p0.f60f0091", "W2921598257#p27.145ec4c4",
+            "W2160816201#p14.ec95be9f", "W2005066437#p29.cde118db",
+            "W3132668373#p4.8bd4f4d2", "W2982822984#p37.0460d25e",
+            "W3132668373#p28.2ec3d6f5", "W3132668373#p35.3485f9f5",
+            "W3044911540#p4.29d0d66e", "W2883927487#p29.71aa3661",
+            "W1979821264#p3.518a0bd2", "W2168669280#p2.82ea1750",
+            "W4387058991#p15.97045a85", "W2790726144#p21.4d896ef5",
+            "W2612257546#p1.b12041a6", "W2298343390#p49.8780954d",
+            "W4406935723#p3.d01784ce", "W4294203154#p41.d68ac02f",
+            "W2074020392#p7.74ef22f2", "W2018663098#p7.c4307836",
+            "W2029901428#p17.7133fe3f", "W2029901428#p27.68346ba2",
+            "W4377089630#p25.96835910",
+        }
+        for evidence_id in evidence_ids:
+            self.assertIn(evidence_id, text)
+
+        ordered_stages = ("cochlea", "auditory nerve", "cochlear nucleus", "superior olivary complex",
+                          "inferior colliculus", "medial geniculate body", "primary auditory cortex",
+                          "non-primary auditory cortex", "cross-modal")
+        positions = [text.index(stage, text.index("## How to trace a stimulus")) for stage in ordered_stages]
+        self.assertEqual(positions, sorted(positions))
+        for required in ("Established", "Supported", "Hypothesis", "Derived", "Background",
+                         "abstract", "passages", "full", "square-law", "detuned receiver",
+                         "medical electrical-safety", "## Limitations that travel with the claims"):
+            self.assertIn(required, text)
+
+    def test_visual_expert_routing_and_method_contract(self):
+        path = ROOT / "agents" / "visual-evoked-potentials.md"
+        text = path.read_text()
+        fields = frontmatter(path)
+        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
+        description = fields["description"].lower()
+        for term in ("use first", "visual evoked potentials", "refraction", "interference",
+                     "phototransduction", "erg", "vep", "ssvep", "retina", "lgn", "v1",
+                     "phase-sensitive", "wins ties", "not for graphic design", "computer vision"):
+            self.assertIn(term, description)
+
+        positive = (
+            "How does a flickering grating become an SSVEP in visual cortex?",
+            "Does the retina preserve the optical phase of an interference pattern?",
+            "Trace chromatic and luminance information from cones through LGN to cortex.",
+            "How do refraction and ocular aberrations change the retinal signal?",
+            "Design a binocular stimulus that separates retinal from cortical contributions.",
+        )
+        negative = (
+            "Make this dashboard easier to scan.",
+            "Choose a portrait lens for my camera.",
+            "Remove glare from this photograph.",
+            "Train an object-detection model.",
+            "Explain an auditory brainstem response.",
+        )
+        for example in positive + negative:
+            self.assertIn(example, text)
+
+        ordered_stages = ("source and propagation", "tear film", "retinal sampling", "phototransduction",
+                          "outer and inner retinal circuitry", "optic nerve", "retinorecipient targets",
+                          "optic radiations and V1", "extrastriate")
+        start = text.index("## How to trace a visual stimulus")
+        positions = [text.index(stage, start) for stage in ordered_stages]
+        self.assertEqual(positions, sorted(positions))
+        for required in ("**Optical phase:**", "**Stimulus phase:**", "**Cellular phase:**",
+                         "**Population phase:**", "Do not claim that retina or cortex preserves electromagnetic optical phase",
+                         "matched optical-intensity", "generic nonlinearity", "PMID `16779799`",
+                         "PMID `16544207`", "PMID `33913164`", "RAG server was unavailable",
+                         "photobiological and photosensitivity safety", "## Handing back"):
+            self.assertIn(required, text)
+
+    def test_bone_conduction_expert_routing_and_method_contract(self):
+        path = ROOT / "agents" / "bone-conduction-auditory.md"
+        text = path.read_text()
+        fields = frontmatter(path)
+        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
+        description = fields["description"].lower()
+        for term in ("use first", "bilateral", "dual-transducer", "bone-conduction headphones",
+                     "cross-talk", "transfer functions", "air-conducted leakage", "vibrotactile",
+                     "cartilage", "dental", "implantable", "wins ties", "not for ordinary air-conduction"):
+            self.assertIn(term, description)
+
+        positive = (
+            "Can two bone-conduction headphone channels deliver independent left and right signals?",
+            "How should I measure cross-talk between bilateral mastoid transducers?",
+            "Trace a bone-conducted waveform from the actuator to each cochlea.",
+            "Could this response be airborne leakage or a tactile cue rather than bone-conducted hearing?",
+            "How do forehead, mastoid, cartilage, dental, and implanted coupling differ?",
+        )
+        negative = (
+            "EQ these over-ear headphones.",
+            "Mix this podcast at -16 LUFS.",
+            "Which loudspeaker placement fixes my room mode?",
+            "Diagnose my conductive hearing loss.",
+            "Explain calcium signaling in osteoblasts.",
+        )
+        for example in positive + negative:
+            self.assertIn(example, text)
+
+        for required in ("[H_LL  H_RL]", "[H_LR  H_RR]", "two-input, two-cochlea",
+                         "matrix conditioning", "left-to-left", "right-to-right",
+                         "air-conducted leakage", "vibrotactile", "re-seated", "PMID `37156121`",
+                         "PMID `37463528`", "RAG server was unavailable",
+                         "`auditory-evoked-potentials` profile", "## Handing back"):
+            self.assertIn(required, text)
 
     def test_only_known_placeholders(self):
         for f in (ROOT / "agents").glob("*.md"):
