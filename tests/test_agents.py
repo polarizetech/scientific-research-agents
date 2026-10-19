@@ -93,7 +93,7 @@ class Briefs(unittest.TestCase):
 
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
-        self.assertEqual(len(briefs), 11)
+        self.assertEqual(len(briefs), 12)
         for f in briefs:
             fields = frontmatter(f)
             self.assertEqual(fields["name"], f.stem)

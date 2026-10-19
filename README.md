@@ -28,6 +28,7 @@ environment cannot or must not create a subagent, the lead applies the relevant 
 | `mathematician` | equations, constants, units and valid ranges; specifies calculators with reference values | sonnet, high |
 | `designer` | layout and visual design on the configured component library; how to show a dataset | sonnet, medium |
 | `frontend-developer` | zero-build, Python-served apps by default; React when justified, always from the configured design system | sonnet, medium |
+| `ios-developer` | native SwiftUI + WKWebView shells around an existing web app; bridge, background audio, simulator and device builds | sonnet, medium |
 | `researcher` | literature and evidence, evidence tiers, claims in the research corpus | sonnet, medium |
 | `analyst` | data analysis and statistics, preregistered analysis plans | sonnet, high |
 | `science-writer` | papers, and blog posts as a separate register | sonnet, medium |

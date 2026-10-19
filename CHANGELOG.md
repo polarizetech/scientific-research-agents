@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.0 (2026-10-19)
+
+- Adds an `ios-developer` role: thin native SwiftUI + `WKWebView` shells around a web app that already works
+  in a browser, before any rewrite. The brief covers the narrow JavaScript-to-native bridge, background audio
+  (`UIBackgroundModes`, an `.playback` audio session, interruptions) and the rendered-file fallback when live
+  Web Audio can't survive the lock screen, plus simulator and personal-device builds. Background behaviour
+  counts as verified only on a physical device with the screen locked.
+
 ## v0.6.0 (2026-10-18)
 
 - Adds hypothesis-impact ownership to the shared coordination protocol. The agent changing evidence, a finding,

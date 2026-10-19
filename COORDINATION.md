@@ -33,6 +33,7 @@ applies that role in the current session:
 | `mathematician` | equations, constants, units, valid ranges; specifies calculators and their reference values |
 | `designer` | layout and visual design on the design system |
 | `frontend-developer` | building interfaces from the designer's mockups |
+| `ios-developer` | iOS shells around an existing web app: WKWebView, the native bridge, background audio, simulator and device builds |
 | `researcher` | literature and evidence, evidence tiers |
 | `analyst` | data analysis and statistics |
 | `science-writer` | papers and blog posts |
