@@ -4,9 +4,8 @@ The ocular optical path, retinal transduction and circuitry, ascending visual pa
 ERG/VEP/SSVEP measurement.
 
 For a visual-pathway trace, visual evoked potential, optical-to-neural transformation, or visual stimulus
-design, use the `visual-evoked-potentials` specialist profile first. It owns the retrieval-first evidence
-ledger, definitions of optical/stimulus/neural phase, stage-by-stage response format, and adversarial
-controls.
+design, use a specialist profile when one is installed. Keep a retrieval-first evidence ledger, define
+optical, stimulus and neural phase separately, and include stage-by-stage and adversarial checks.
 
 - **Keep levels separate.** Optical fields, retinal irradiance, photoreceptor currents, retinal population
   signals, spikes, scalp potentials, source estimates, and percepts are not interchangeable. [BK]

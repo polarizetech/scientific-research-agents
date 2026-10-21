@@ -1,17 +1,15 @@
 # Standard interface and small-app architecture
 
-This is the default shared by Polarize research apps. It records an existing convention, not a new
-framework choice.
+This is a reusable default for small research apps. An organisation can choose another established
+architecture in its profile or repository instructions.
 
 ## Design system
 
-The organisation profile supplies `{{design_system}}`. In a Polarize installation that resolves to
-[`polarizetech/polarize-ui`](https://github.com/polarizetech/polarize-ui), whose package name is
-`@polarizetech/polarize-ui`.
+The organisation profile supplies `{{design_system}}`.
 
 Before designing or implementing an element:
 
-1. read the pinned release's `README.md`, `METHOD.md`, integration guide, and Storybook;
+1. read the pinned release's documentation and component catalogue;
 2. search its public components, science views, layouts, tokens, custom elements, and CSS classes;
 3. reuse the existing element without copying or locally restyling it;
 4. if it is missing, add it to the design-system repository with a story and checks, release it, pin that
@@ -55,7 +53,7 @@ apps/<slug>/vN/
 ## When the default is not enough
 
 React is appropriate when interaction and state have outgrown the zero-build form. It still uses the pinned
-`@polarizetech/polarize-ui` React exports and theme rather than an app-local component system. Vite may build
+design system's React exports and theme rather than an app-local component system. Vite may build
 the browser bundle, but a research tool with local APIs keeps a Python server as its documented entrypoint
 and serves the built assets plus `/api/` routes.
 
@@ -76,10 +74,8 @@ Python `serve.py` unless the repository's established convention says otherwise.
 The finished app records the design-system repository and tag, the command that starts it, its local URL,
 its API routes, and the checks that were run.
 
-## Basis in existing applications
+## Choosing another architecture
 
-This convention was checked against the scaffold protocol and representative apps including
-`audio-evoked-potentials/apps/tuning-forks`, `matched-entropy-demodulation/apps/v15-visual-cortex`, and
-`world-seeding/apps/primary-elements/v1`. They use Python stdlib servers, explicit asset maps or allow-lists,
-environment-configurable paths/ports, and the shared Polarize design system. Repository-specific additions
-do not change the default above.
+An existing application can keep its working architecture. Record its entrypoint, dependency versions,
+asset policy, API ownership, and reason for diverging from the small-app default before adding another
+runtime or server.

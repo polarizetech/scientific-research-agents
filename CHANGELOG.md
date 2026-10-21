@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.0 (2026-10-21)
+
+- Narrows the public package to reusable starter roles and adds a specialist brief template and a guide
+  for keeping personal profiles in a separate private repository.
+- Adds an opt-in, environment-configured installer for private specialist briefs that extend the public
+  researcher role and route from a study's `AGENTS.md` outside the scaffold-managed block.
+- Removes organisation-specific design-system examples from the starter roles and app architecture guide.
+
 ## v0.7.0 (2026-10-19)
 
 - Adds an `ios-developer` role: thin native SwiftUI + `WKWebView` shells around a web app that already works

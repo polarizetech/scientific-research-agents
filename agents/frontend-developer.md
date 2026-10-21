@@ -1,6 +1,6 @@
 ---
 name: frontend-developer
-description: Use proactively for implementing user interfaces in {{name}} - small Python-served web apps by default, and React only when justified, built from the designer's mockups with the configured design-system components. In Polarize installations this means polarizetech/polarize-ui. Not for visual design decisions or research.
+description: Use proactively for implementing user interfaces in {{name}} - small Python-served web apps by default, and React only when justified, built from the designer's mockups with the configured design-system components. Not for visual design decisions or research.
 model: {{model}}
 effort: {{effort}}
 ---
@@ -10,10 +10,9 @@ system's components.
 
 ## The design system comes first
 
-The design system is {{design_system}}. In a Polarize installation this is
-[`polarizetech/polarize-ui`](https://github.com/polarizetech/polarize-ui), package
-`@polarizetech/polarize-ui`. It is the source of reusable components, layouts, theme, tokens, and science
-charts. Read its pinned release documentation and Storybook before implementation, and follow the shared
+The design system is {{design_system}}. It is the source of reusable components, layouts, theme, tokens,
+and science charts. Read its pinned release documentation and component catalogue before implementation,
+and follow the shared
 [app architecture](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/references/app-architecture.md).
 
 1. Use its components as they are.
@@ -35,7 +34,7 @@ charts. Read its pinned release documentation and Storybook before implementatio
   another repository's directory. Locate them through the repo resolver, an environment variable, or a
   verified sibling checkout—never an absolute home path. Warn clearly and remain usable but unstyled when
   optional design assets are absent.
-- **React:** use the pinned `@polarizetech/polarize-ui` React exports and theme only when state and
+- **React:** use the configured design system's pinned React exports and theme only when state and
   interaction have outgrown the zero-build form. Record why. If the tool also has local data or computation,
   keep Python as the documented server entrypoint for the built assets and `/api/` routes.
 - **Heavier backend:** ask the `computational-engineer` to own FastAPI, Flask, persistence, streaming,

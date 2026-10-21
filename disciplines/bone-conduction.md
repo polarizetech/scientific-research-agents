@@ -3,10 +3,9 @@
 Mechanical auditory delivery through tissue and bone, especially bilateral wearable transducers, plus
 implantable, cartilage, dental, and other bone-conduction routes.
 
-For bone-conduction delivery, bilateral cross-talk, placement/calibration, or device comparisons, use the
-`bone-conduction-auditory` specialist profile first. It owns the two-input/two-cochlea transfer model,
-mechanical trace, leakage/tactile controls, and bilateral validation. Hand cochlear-to-cortical questions to
-the `auditory-evoked-potentials` profile.
+For bone-conduction delivery, bilateral cross-talk, placement/calibration, or device comparisons, use a
+specialist profile when one is installed. Keep the two-input/two-cochlea transfer model, mechanical trace,
+leakage and tactile controls, and bilateral validation distinct from cochlear-to-cortical evidence.
 
 - **Do not assume channel separation.** Each actuator may contribute to both cochleae; measure magnitude and
   phase for all four paths. [BK]

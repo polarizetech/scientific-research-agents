@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+"""Install private specialist briefs as extensions of an installed public researcher brief."""
+import argparse
+import os
+import re
+import sys
+from pathlib import Path
+
+MARK = "<!-- scientific-research-agent-extension: researcher -->"
+START = "<!-- scientific-research-agent-extensions:start -->"
+END = "<!-- scientific-research-agent-extensions:end -->"
+VARIABLES = ("name", "corpus_repo", "design_system", "conventions", "model", "effort", "agents_ref")
+
+
+def fail(message):
+    raise ValueError(message)
+
+
+def read_env(path):
+    """Read a small data-only env file; never execute shell text from it."""
+    result = {}
+    if not path:
+        return result
+    for number, raw in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            fail("{}:{}: expected KEY=VALUE".format(path, number))
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*", key):
+            fail("{}:{}: invalid key".format(path, number))
+        result[key] = value.strip().strip('"').strip("'")
+    return result
+
+
+def split_brief(path):
+    content = path.read_text(encoding="utf-8")
+    match = re.match(r"\A---\n(.*?)\n---\n(.*)\Z", content, re.S)
+    if not match:
+        fail("{}: missing YAML frontmatter".format(path))
+    fields = {}
+    for line in match.group(1).splitlines():
+        if ": " not in line:
+            fail("{}: invalid frontmatter".format(path))
+        key, value = line.split(": ", 1)
+        fields[key] = value
+    return fields, match.group(2).strip()
+
+
+def render(content, values, where):
+    def replace(match):
+        key = match.group(1)
+        if key not in VARIABLES or not values.get(key):
+            fail("{}: missing value for {{{{{}}}}}".format(where, key))
+        return values[key]
+    return re.sub(r"\{\{(\w+)\}\}", replace, content)
+
+
+def install(args):
+    env = dict(os.environ)
+    env.update(read_env(args.env_file))
+    source = args.source or env.get("SCIENTIFIC_RESEARCH_AGENT_EXTENSIONS")
+    if not source:
+        fail("set SCIENTIFIC_RESEARCH_AGENT_EXTENSIONS or pass --source")
+    source_dir = Path(source).expanduser().resolve() / "agents"
+    target = Path(args.target).expanduser().resolve()
+    base_path = target / ".claude/agents/researcher.md"
+    if not base_path.is_file():
+        fail("{} is missing; install the public researcher first".format(base_path))
+    base_fields, base_body = split_brief(base_path)
+    if base_fields.get("name") != "researcher":
+        fail("{} is not a researcher brief".format(base_path))
+    if not source_dir.is_dir():
+        fail("{} is not a profile directory".format(source_dir))
+    available = {p.stem: p for p in source_dir.glob("*.md")}
+    names = sorted(available) if args.all else args.profile
+    if not names:
+        fail("pass --profile NAME (repeatable) or --all")
+    if len(set(names)) != len(names):
+        fail("duplicate profile name")
+    values = {key: env.get("SCIENTIFIC_RESEARCH_AGENT_" + key.upper(), "") for key in VARIABLES}
+    values.update({"name": args.name or values["name"] or target.name,
+                   "model": args.model or values["model"] or base_fields.get("model", ""),
+                   "effort": args.effort or values["effort"] or base_fields.get("effort", ""),
+                   "corpus_repo": args.corpus_repo or values["corpus_repo"],
+                   "agents_ref": args.agents_ref or values["agents_ref"]})
+    prepared = []
+    for name in names:
+        if name not in available:
+            fail("profile {!r} not found in {}".format(name, source_dir))
+        if not re.fullmatch(r"[a-z][a-z0-9-]*", name):
+            fail("invalid profile filename {!r}".format(name))
+        fields, body = split_brief(available[name])
+        if fields.get("name") != name or fields.get("extends") != "researcher":
+            fail("{} must declare matching name and extends: researcher".format(available[name]))
+        if any(key not in ("name", "description", "model", "effort", "extends") for key in fields):
+            fail("{} has unsupported frontmatter".format(available[name]))
+        if ": " in fields.get("description", ""):
+            fail("{} has invalid description".format(available[name]))
+        destination = target / ".claude/agents" / (name + ".md")
+        if destination.exists() and MARK not in destination.read_text(encoding="utf-8"):
+            fail("{} exists and was not installed by this tool".format(destination))
+        frontmatter = ("---\nname: {name}\ndescription: {description}\nmodel: {model}\n"
+                       "effort: {effort}\n---\n").format(**{key: render(fields[key], values, name)
+                                                       for key in ("name", "description", "model", "effort")})
+        combined = (frontmatter + "\n" + MARK + "\n\n## Researcher foundation\n\n" + base_body +
+                    "\n\n## Specialist extension\n\n" + render(body, values, name) + "\n")
+        prepared.append((destination, combined, fields["description"]))
+    instructions = target / "AGENTS.md"
+    current = instructions.read_text(encoding="utf-8") if instructions.exists() else ""
+    if current.count(START) != current.count(END) or current.count(START) > 1:
+        fail("{} has malformed extension markers".format(instructions))
+    if START in current:
+        current = current[:current.index(START)].rstrip() + "\n\n" + current[current.index(END) + len(END):].lstrip()
+    rows = ["| role | use when | brief |", "|---|---|---|"]
+    for destination, _, description in prepared:
+        summary = render(description, values, destination.name).replace("|", "\\|")
+        rows.append("| `{}` | {} | `.claude/agents/{}` |".format(destination.stem, summary, destination.name))
+    block = (START + "\n## Private researcher extensions\n\nThese briefs include the public researcher "
+             "foundation and add topic-specific instructions. Read the matching brief when a question "
+             "falls in its scope. Apply it in this session if subagents are unavailable.\n\n" +
+             "\n".join(rows) + "\n" + END + "\n")
+    for destination, content, _ in prepared:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(content, encoding="utf-8")
+        print("installed {}".format(destination))
+    instructions.write_text(current.rstrip() + "\n\n" + block, encoding="utf-8")
+    print("updated {}".format(instructions))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--target", required=True, help="study or tool repository to install into")
+    parser.add_argument("--source", help="private profile checkout; overrides the environment")
+    parser.add_argument("--env-file", help="local KEY=VALUE file; never shell-executed")
+    parser.add_argument("--profile", action="append", default=[], help="profile to install; repeatable")
+    parser.add_argument("--all", action="store_true", help="install every profile in the source")
+    parser.add_argument("--name")
+    parser.add_argument("--corpus-repo")
+    parser.add_argument("--model")
+    parser.add_argument("--effort")
+    parser.add_argument("--agents-ref", help="public agent release tag used by private source links")
+    args = parser.parse_args()
+    if args.all and args.profile:
+        parser.error("choose --all or --profile")
+    try:
+        install(args)
+    except (OSError, ValueError) as error:
+        parser.exit(2, "error: {}\n".format(error))
+
+
+if __name__ == "__main__":
+    main()
