@@ -33,8 +33,7 @@ When a small app needs local data or computation, follow the shared
 [app architecture](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/references/app-architecture.md).
 The default entrypoint is Python `serve.py`: use the standard library `ThreadingHTTPServer` for static files
 and modest JSON routes, with browser files kept as `index.html`, `app.js`, and `app.css`. The frontend uses
-the pinned `{{design_system}}` release; in Polarize installations that is
-`polarizetech/polarize-ui` / `@polarizetech/polarize-ui`.
+the pinned `{{design_system}}` release.
 
 Own non-trivial API computation, persistence, streaming, and authentication. Agree the `/api/` JSON
 contract with the `frontend-developer` before implementation. Use FastAPI, Flask, or another framework only

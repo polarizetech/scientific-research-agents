@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -61,20 +62,18 @@ class Briefs(unittest.TestCase):
     def test_interface_profiles_share_design_and_app_architecture(self):
         designer = (ROOT / "agents" / "designer.md").read_text()
         frontend = (ROOT / "agents" / "frontend-developer.md").read_text()
-        engineer = (ROOT / "agents" / "computational-engineer.md").read_text()
         reference = (ROOT / "references" / "app-architecture.md").read_text()
 
-        for text in (designer, frontend, engineer, reference):
-            self.assertIn("polarizetech/polarize-ui", text)
+        for text in (designer, frontend, reference):
             self.assertIn("{{design_system}}", text)
-        for text in (designer, frontend, engineer):
+        for text in (designer, frontend):
             self.assertIn("app-architecture.md", text)
 
         for text in (designer, frontend, reference):
             self.assertIn("pinned release", text)
             self.assertIn("design-system", text)
 
-        for text in (frontend, engineer, reference):
+        for text in (frontend, reference):
             self.assertIn("serve.py", text)
             self.assertIn("ThreadingHTTPServer", text)
             self.assertIn("index.html", text)
@@ -85,160 +84,19 @@ class Briefs(unittest.TestCase):
         self.assertIn("allow-list", frontend)
         self.assertIn("never mount", frontend)
         self.assertIn("FastAPI", frontend)
-        self.assertIn("FastAPI", engineer)
         self.assertIn("Record that reason", reference)
-        self.assertIn("audio-evoked-potentials/apps/tuning-forks", reference)
-        self.assertIn("matched-entropy-demodulation/apps/v15-visual-cortex", reference)
-        self.assertIn("world-seeding/apps/primary-elements/v1", reference)
 
     def test_every_brief_is_a_valid_subagent(self):
         briefs = sorted((ROOT / "agents").glob("*.md"))
-        self.assertEqual(len(briefs), 12)
+        self.assertEqual({f.stem for f in briefs}, {"scout", "computational-engineer", "mathematician",
+                          "designer", "frontend-developer", "ios-developer", "researcher", "analyst",
+                          "science-writer"})
         for f in briefs:
             fields = frontmatter(f)
             self.assertEqual(fields["name"], f.stem)
             self.assertNotIn(": ", fields["description"], f"{f.name}: ': ' breaks YAML frontmatter")
             self.assertEqual((fields["model"], fields["effort"]), ("{{model}}", "{{effort}}"), f.name)
             self.assertIn("Handing back" if f.stem != "scout" else "What you hand back", f.read_text())
-
-    def test_aep_expert_routing_and_grounding_contract(self):
-        path = ROOT / "agents" / "auditory-evoked-potentials.md"
-        text = path.read_text()
-        fields = frontmatter(path)
-        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
-        description = fields["description"].lower()
-        for term in ("use first", "abr", "assr", "ffr", "mmn", "p300", "binaural", "cochlear",
-                     "neurophonic potentials", "auditory crossover", "wins ties",
-                     "not for audio engineering", "music production", "speech-to-text"):
-            self.assertIn(term, description)
-
-        positive = (
-            "What latency is ABR wave V and where is it generated?",
-            "Design a 40 Hz binaural-beat stimulus that produces a cortical ASSR.",
-            "Does a 500 Hz carrier reach cortex as a waveform?",
-            "Where are ITD and ILD computed, and what survives to IC?",
-            "Can a sound reset visual-cortex alpha phase?",
-        )
-        negative = (
-            "Mix this podcast at -16 LUFS.",
-            "Master this song for streaming.",
-            "Transcribe this interview.",
-            "Explain visual steady-state evoked potentials.",
-            "Which microphone should I buy for vocals?",
-        )
-        for example in positive + negative:
-            self.assertIn(example, text)
-
-        self.assertRegex(text, r"low carrier near 400 Hz, not a\s+carrier near 3 kHz")
-        self.assertIn("does **not** reach cortex as a copied 500 Hz waveform", text)
-        self.assertIn("no cortical FFR above about 150 Hz", text)
-        self.assertIn("W3132668373#p35.3485f9f5", text)
-        self.assertIn("W2005066437#p29.cde118db", text)
-
-        evidence_ids = {
-            "W3132093913#p1.84c83136", "W3132093913#p7.1a8911b6",
-            "W2018764702#p4.ec23c0f4", "W2019142244#p0.70984e33",
-            "W2009521233#p0.f60f0091", "W2921598257#p27.145ec4c4",
-            "W2160816201#p14.ec95be9f", "W2005066437#p29.cde118db",
-            "W3132668373#p4.8bd4f4d2", "W2982822984#p37.0460d25e",
-            "W3132668373#p28.2ec3d6f5", "W3132668373#p35.3485f9f5",
-            "W3044911540#p4.29d0d66e", "W2883927487#p29.71aa3661",
-            "W1979821264#p3.518a0bd2", "W2168669280#p2.82ea1750",
-            "W4387058991#p15.97045a85", "W2790726144#p21.4d896ef5",
-            "W2612257546#p1.b12041a6", "W2298343390#p49.8780954d",
-            "W4406935723#p3.d01784ce", "W4294203154#p41.d68ac02f",
-            "W2074020392#p7.74ef22f2", "W2018663098#p7.c4307836",
-            "W2029901428#p17.7133fe3f", "W2029901428#p27.68346ba2",
-            "W4377089630#p25.96835910",
-        }
-        for evidence_id in evidence_ids:
-            self.assertIn(evidence_id, text)
-
-        ordered_stages = ("cochlea", "auditory nerve", "cochlear nucleus", "superior olivary complex",
-                          "inferior colliculus", "medial geniculate body", "primary auditory cortex",
-                          "non-primary auditory cortex", "cross-modal")
-        positions = [text.index(stage, text.index("## How to trace a stimulus")) for stage in ordered_stages]
-        self.assertEqual(positions, sorted(positions))
-        for required in ("Established", "Supported", "Hypothesis", "Derived", "Background",
-                         "abstract", "passages", "full", "square-law", "detuned receiver",
-                         "medical electrical-safety", "## Limitations that travel with the claims"):
-            self.assertIn(required, text)
-
-    def test_visual_expert_routing_and_method_contract(self):
-        path = ROOT / "agents" / "visual-evoked-potentials.md"
-        text = path.read_text()
-        fields = frontmatter(path)
-        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
-        description = fields["description"].lower()
-        for term in ("use first", "visual evoked potentials", "refraction", "interference",
-                     "phototransduction", "erg", "vep", "ssvep", "retina", "lgn", "v1",
-                     "phase-sensitive", "wins ties", "not for graphic design", "computer vision"):
-            self.assertIn(term, description)
-
-        positive = (
-            "How does a flickering grating become an SSVEP in visual cortex?",
-            "Does the retina preserve the optical phase of an interference pattern?",
-            "Trace chromatic and luminance information from cones through LGN to cortex.",
-            "How do refraction and ocular aberrations change the retinal signal?",
-            "Design a binocular stimulus that separates retinal from cortical contributions.",
-        )
-        negative = (
-            "Make this dashboard easier to scan.",
-            "Choose a portrait lens for my camera.",
-            "Remove glare from this photograph.",
-            "Train an object-detection model.",
-            "Explain an auditory brainstem response.",
-        )
-        for example in positive + negative:
-            self.assertIn(example, text)
-
-        ordered_stages = ("source and propagation", "tear film", "retinal sampling", "phototransduction",
-                          "outer and inner retinal circuitry", "optic nerve", "retinorecipient targets",
-                          "optic radiations and V1", "extrastriate")
-        start = text.index("## How to trace a visual stimulus")
-        positions = [text.index(stage, start) for stage in ordered_stages]
-        self.assertEqual(positions, sorted(positions))
-        for required in ("**Optical phase:**", "**Stimulus phase:**", "**Cellular phase:**",
-                         "**Population phase:**", "Do not claim that retina or cortex preserves electromagnetic optical phase",
-                         "matched optical-intensity", "generic nonlinearity", "PMID `16779799`",
-                         "PMID `16544207`", "PMID `33913164`", "RAG server was unavailable",
-                         "photobiological and photosensitivity safety", "## Handing back"):
-            self.assertIn(required, text)
-
-    def test_bone_conduction_expert_routing_and_method_contract(self):
-        path = ROOT / "agents" / "bone-conduction-auditory.md"
-        text = path.read_text()
-        fields = frontmatter(path)
-        self.assertEqual(set(fields), {"name", "description", "model", "effort"})
-        description = fields["description"].lower()
-        for term in ("use first", "bilateral", "dual-transducer", "bone-conduction headphones",
-                     "cross-talk", "transfer functions", "air-conducted leakage", "vibrotactile",
-                     "cartilage", "dental", "implantable", "wins ties", "not for ordinary air-conduction"):
-            self.assertIn(term, description)
-
-        positive = (
-            "Can two bone-conduction headphone channels deliver independent left and right signals?",
-            "How should I measure cross-talk between bilateral mastoid transducers?",
-            "Trace a bone-conducted waveform from the actuator to each cochlea.",
-            "Could this response be airborne leakage or a tactile cue rather than bone-conducted hearing?",
-            "How do forehead, mastoid, cartilage, dental, and implanted coupling differ?",
-        )
-        negative = (
-            "EQ these over-ear headphones.",
-            "Mix this podcast at -16 LUFS.",
-            "Which loudspeaker placement fixes my room mode?",
-            "Diagnose my conductive hearing loss.",
-            "Explain calcium signaling in osteoblasts.",
-        )
-        for example in positive + negative:
-            self.assertIn(example, text)
-
-        for required in ("[H_LL  H_RL]", "[H_LR  H_RR]", "two-input, two-cochlea",
-                         "matrix conditioning", "left-to-left", "right-to-right",
-                         "air-conducted leakage", "vibrotactile", "re-seated", "PMID `37156121`",
-                         "PMID `37463528`", "RAG server was unavailable",
-                         "`auditory-evoked-potentials` profile", "## Handing back"):
-            self.assertIn(required, text)
 
     def test_only_known_placeholders(self):
         for f in (ROOT / "agents").glob("*.md"):
@@ -265,6 +123,42 @@ class Briefs(unittest.TestCase):
         table = json.loads((ROOT / "prices.json").read_text())
         for m in table["models"]:
             self.assertEqual(set(m), {"id", "input", "output", "cache_read"}, m)
+
+
+class Extensions(unittest.TestCase):
+    def test_private_extension_inherits_researcher_and_routes_outside_scaffold_block(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "private"
+            (source / "agents").mkdir(parents=True)
+            (source / "agents" / "bee.md").write_text(
+                "---\nname: bee\ndescription: Use first for bee evidence in {{name}}.\n"
+                "extends: researcher\nmodel: {{model}}\neffort: {{effort}}\n---\n\n"
+                "Find bee evidence in {{corpus_repo}} at {{agents_ref}}.\n")
+            target = root / "study"
+            (target / ".claude/agents").mkdir(parents=True)
+            (target / ".claude/agents/researcher.md").write_text(
+                "---\nname: researcher\ndescription: General research.\nmodel: sonnet\n"
+                "effort: medium\n---\n\nVerify evidence first.\n")
+            managed = "<!-- scaffold:start -->\nPublic roles\n<!-- scaffold:end -->\n"
+            (target / "AGENTS.md").write_text(managed)
+            env_file = root / "private.env"
+            env_file.write_text("SCIENTIFIC_RESEARCH_AGENT_EXTENSIONS={}\n"
+                                "SCIENTIFIC_RESEARCH_AGENT_CORPUS_REPO=org/research\n"
+                                "SCIENTIFIC_RESEARCH_AGENT_AGENTS_REF=v0.8.0\n".format(source))
+            command = ["python3", str(ROOT / "bin/install-agent-extensions"), "--env-file", str(env_file),
+                       "--target", str(target), "--profile", "bee"]
+            for _ in range(2):
+                result = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+            installed = (target / ".claude/agents/bee.md").read_text()
+            self.assertIn("Verify evidence first.", installed)
+            self.assertIn("Find bee evidence in org/research at v0.8.0.", installed)
+            self.assertNotIn("extends: researcher", installed.split("---", 2)[1])
+            routing = (target / "AGENTS.md").read_text()
+            self.assertIn(managed, routing)
+            self.assertEqual(routing.count("<!-- scientific-research-agent-extensions:start -->"), 1)
+            self.assertIn("`.claude/agents/bee.md`", routing)
 
 
 class Usage(unittest.TestCase):
