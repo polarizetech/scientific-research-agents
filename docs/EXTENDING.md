@@ -19,6 +19,25 @@ python3 bin/install-agent-extensions --env-file .agent-extensions.env \
   --target /path/to/private-study --profile honeybee-communications-analyst
 ```
 
+Set `SCIENTIFIC_RESEARCH_AGENT_CORPUS_REPO` to the repository identifier used in briefs, such as
+`owner/research`. Set `SCIENTIFIC_RESEARCH_AGENT_RESEARCH_REPO` to an existing local Git checkout of that
+repository. The setting stays in the ignored `.agent-extensions.env`; installed study briefs also contain
+the resolved local path so the agent can open its folder. Review generated briefs before publishing a study.
+`--research-repo` overrides that path for one invocation. When configured, installation creates
+`agent-research/<profile>/README.md` in the research checkout and embeds that profile's absolute research
+folder in its installed brief. A profile can read Markdown the person adds there and write new notes there.
+Existing notes are never overwritten.
+
+To create folders for every private profile before installing any into a study, run:
+
+```sh
+python3 bin/install-agent-extensions --env-file .agent-extensions.env --all --init-research
+```
+
+Use `--profile NAME --init-research` to create only one folder. Research notes stay in the selected
+research repository; this public package contains neither those notes nor the private path. When the
+profile is used directly from its source brief, point it at the same folder convention.
+
 The target must already contain `.claude/agents/researcher.md`, installed by the public scaffold or copied
 from this package with its placeholders filled. Repeat `--profile` to install several specialists, or use
 `--all` for every source brief. `--name`, `--corpus-repo`, `--model`, `--effort`, and `--agents-ref` override

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.0 (2026-10-22)
+
+- Adds an optional local research checkout setting for private profiles. Each profile receives its own
+  `agent-research/<profile>/` Markdown folder, and installed briefs point to it. Folders can be initialized
+  without installing a profile into a study; existing notes are preserved.
+
 ## v0.8.0 (2026-10-21)
 
 - Narrows the public package to reusable starter roles and adds a specialist brief template and a guide

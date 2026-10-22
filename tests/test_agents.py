@@ -160,6 +160,44 @@ class Extensions(unittest.TestCase):
             self.assertEqual(routing.count("<!-- scientific-research-agent-extensions:start -->"), 1)
             self.assertIn("`.claude/agents/bee.md`", routing)
 
+    def test_profile_research_folders_are_created_and_existing_notes_are_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "private"
+            (source / "agents").mkdir(parents=True)
+            (source / "agents" / "translator.md").write_text(
+                "---\nname: translator\ndescription: Translate sources in {{name}}.\n"
+                "extends: researcher\nmodel: {{model}}\neffort: {{effort}}\n---\n\n"
+                "Use {{corpus_repo}}.\n")
+            research = root / "research"
+            (research / ".git").mkdir(parents=True)
+            folder = research / "agent-research" / "translator"
+            folder.mkdir(parents=True)
+            (folder / "user-note.md").write_text("My research\n")
+            env_file = root / "private.env"
+            env_file.write_text("SCIENTIFIC_RESEARCH_AGENT_EXTENSIONS={}\n"
+                                "SCIENTIFIC_RESEARCH_AGENT_CORPUS_REPO=org/research\n"
+                                "SCIENTIFIC_RESEARCH_AGENT_RESEARCH_REPO={}\n"
+                                "SCIENTIFIC_RESEARCH_AGENT_AGENTS_REF=v0.9.0\n".format(source, research))
+            command = ["python3", str(ROOT / "bin/install-agent-extensions"), "--env-file", str(env_file),
+                       "--profile", "translator"]
+            result = subprocess.run(command + ["--init-research"], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((folder / "README.md").is_file())
+            (folder / "README.md").write_text("My index\n")
+            target = root / "study"
+            (target / ".claude/agents").mkdir(parents=True)
+            (target / ".claude/agents/researcher.md").write_text(
+                "---\nname: researcher\ndescription: General research.\nmodel: sonnet\n"
+                "effort: medium\n---\n\nVerify evidence first.\n")
+            result = subprocess.run(command + ["--target", str(target)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            installed = (target / ".claude/agents/translator.md").read_text()
+            self.assertIn(str(folder), installed)
+            self.assertIn("org/research", installed)
+            self.assertEqual((folder / "README.md").read_text(), "My index\n")
+            self.assertEqual((folder / "user-note.md").read_text(), "My research\n")
+
 
 class Usage(unittest.TestCase):
     def setUp(self):
