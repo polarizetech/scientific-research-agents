@@ -59,6 +59,29 @@ def render(content, values, where):
     return re.sub(r"\{\{(\w+)\}\}", replace, content)
 
 
+def profile_research_dir(repo, name):
+    return repo / "agent-research" / name
+
+
+def initialize_research(repo, names):
+    """Create only missing profile folders; never replace a person's notes."""
+    if not repo.is_dir() or not (repo / ".git").exists():
+        fail("{} is not an existing Git research checkout".format(repo))
+    for name in names:
+        folder = profile_research_dir(repo, name)
+        folder.mkdir(parents=True, exist_ok=True)
+        readme = folder / "README.md"
+        if not readme.exists():
+            readme.write_text(
+                "# Research for {}\n\n".format(name) +
+                "Add Markdown source notes, translations, and findings here. Record the source or "
+                "witness, exact location, date or date range, attribution, read depth, and "
+                "confidence. Separate quotation, translation, and inference. Keep uncertain or "
+                "unverified material visibly marked; preserve your own notes when updating "
+                "profiles.\n", encoding="utf-8")
+        print("research {}".format(folder))
+
+
 def install(args):
     env = dict(os.environ)
     env.update(read_env(args.env_file))
@@ -66,13 +89,6 @@ def install(args):
     if not source:
         fail("set SCIENTIFIC_RESEARCH_AGENT_EXTENSIONS or pass --source")
     source_dir = Path(source).expanduser().resolve() / "agents"
-    target = Path(args.target).expanduser().resolve()
-    base_path = target / ".claude/agents/researcher.md"
-    if not base_path.is_file():
-        fail("{} is missing; install the public researcher first".format(base_path))
-    base_fields, base_body = split_brief(base_path)
-    if base_fields.get("name") != "researcher":
-        fail("{} is not a researcher brief".format(base_path))
     if not source_dir.is_dir():
         fail("{} is not a profile directory".format(source_dir))
     available = {p.stem: p for p in source_dir.glob("*.md")}
@@ -81,6 +97,29 @@ def install(args):
         fail("pass --profile NAME (repeatable) or --all")
     if len(set(names)) != len(names):
         fail("duplicate profile name")
+    for name in names:
+        if name not in available:
+            fail("profile {!r} not found in {}".format(name, source_dir))
+        if not re.fullmatch(r"[a-z][a-z0-9-]*", name):
+            fail("invalid profile filename {!r}".format(name))
+    research_value = args.research_repo or env.get("SCIENTIFIC_RESEARCH_AGENT_RESEARCH_REPO")
+    research_repo = Path(research_value).expanduser().resolve() if research_value else None
+    if args.init_research:
+        if not research_repo:
+            fail("set SCIENTIFIC_RESEARCH_AGENT_RESEARCH_REPO or pass --research-repo")
+        initialize_research(research_repo, names)
+        return
+    if not args.target:
+        fail("pass --target to install profiles, or --init-research to create their research folders")
+    target = Path(args.target).expanduser().resolve()
+    base_path = target / ".claude/agents/researcher.md"
+    if not base_path.is_file():
+        fail("{} is missing; install the public researcher first".format(base_path))
+    base_fields, base_body = split_brief(base_path)
+    if base_fields.get("name") != "researcher":
+        fail("{} is not a researcher brief".format(base_path))
+    if research_repo and (not research_repo.is_dir() or not (research_repo / ".git").exists()):
+        fail("{} is not an existing Git research checkout".format(research_repo))
     values = {key: env.get("SCIENTIFIC_RESEARCH_AGENT_" + key.upper(), "") for key in VARIABLES}
     values.update({"name": args.name or values["name"] or target.name,
                    "model": args.model or values["model"] or base_fields.get("model", ""),
@@ -89,10 +128,6 @@ def install(args):
                    "agents_ref": args.agents_ref or values["agents_ref"]})
     prepared = []
     for name in names:
-        if name not in available:
-            fail("profile {!r} not found in {}".format(name, source_dir))
-        if not re.fullmatch(r"[a-z][a-z0-9-]*", name):
-            fail("invalid profile filename {!r}".format(name))
         fields, body = split_brief(available[name])
         if fields.get("name") != name or fields.get("extends") != "researcher":
             fail("{} must declare matching name and extends: researcher".format(available[name]))
@@ -106,8 +141,15 @@ def install(args):
         frontmatter = ("---\nname: {name}\ndescription: {description}\nmodel: {model}\n"
                        "effort: {effort}\n---\n").format(**{key: render(fields[key], values, name)
                                                        for key in ("name", "description", "model", "effort")})
+        workspace = ""
+        if research_repo:
+            folder = profile_research_dir(research_repo, name)
+            workspace = ("\n\n## Profile research folder\n\nRead and write Markdown notes in `" + str(folder) +
+                         "`. Read existing notes as leads, verify cited sources afresh for the current "
+                         "question, and preserve user-added files. This local checkout belongs to " +
+                         (values["corpus_repo"] or "the configured research repository") + ".")
         combined = (frontmatter + "\n" + MARK + "\n\n## Researcher foundation\n\n" + base_body +
-                    "\n\n## Specialist extension\n\n" + render(body, values, name) + "\n")
+                    workspace + "\n\n## Specialist extension\n\n" + render(body, values, name) + "\n")
         prepared.append((destination, combined, fields["description"]))
     instructions = target / "AGENTS.md"
     current = instructions.read_text(encoding="utf-8") if instructions.exists() else ""
@@ -123,6 +165,8 @@ def install(args):
              "foundation and add topic-specific instructions. Read the matching brief when a question "
              "falls in its scope. Apply it in this session if subagents are unavailable.\n\n" +
              "\n".join(rows) + "\n" + END + "\n")
+    if research_repo:
+        initialize_research(research_repo, names)
     for destination, content, _ in prepared:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(content, encoding="utf-8")
@@ -133,9 +177,11 @@ def install(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--target", required=True, help="study or tool repository to install into")
+    parser.add_argument("--target", help="study or tool repository to install into")
     parser.add_argument("--source", help="private profile checkout; overrides the environment")
     parser.add_argument("--env-file", help="local KEY=VALUE file; never shell-executed")
+    parser.add_argument("--research-repo", help="local research Git checkout; overrides the environment")
+    parser.add_argument("--init-research", action="store_true", help="create profile research folders without a target")
     parser.add_argument("--profile", action="append", default=[], help="profile to install; repeatable")
     parser.add_argument("--all", action="store_true", help="install every profile in the source")
     parser.add_argument("--name")

@@ -42,6 +42,9 @@ and keep project-specific ones in a separate private repository. The
 [`extension guide`](docs/EXTENDING.md) explains how `bin/install-agent-extensions` reads a local private
 checkout, combines each specialist with the public `researcher` brief, and installs routing into a study
 without adding the private checkout to this public package.
+An optional local research checkout setting gives each private profile its own
+`agent-research/<profile>/` folder for Markdown sources and findings. The installer can create those
+folders independently of study installation.
 
 ### Updating specialist grounding
 
