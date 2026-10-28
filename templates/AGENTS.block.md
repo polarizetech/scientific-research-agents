@@ -5,17 +5,24 @@
 Maintained by scientific-research-scaffold from scientific-research-agents (`scaffold update` keeps this section current; edits here are
 replaced). The full rules are the [coordination protocol](https://github.com/polarizetech/scientific-research-agents/blob/{{agents_ref}}/COORDINATION.md).
 
-## Retrieval before search
+## Retrieval first, for every question
 
-Every request handled by the lead or any specialist agent uses the configured Scientific Research RAG MCP
-backed by [`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation)
-before any literature, web, corpus, or other search. It may be exposed as `scientific_research_rag` or
-`research-rag`. Ground answers in its retrieved passages.
+Every question or task handled by the lead or any specialist agent, in any assistant (Claude, Codex or
+another), starts with the configured Scientific Research RAG MCP backed by
+[`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation)
+before answering and before any literature, web, corpus, or other search. It may be exposed as
+`scientific_research_rag` or `research-rag`. Ground answers in its retrieved passages. A reply that only
+approves or answers the agent's own question continues the earlier request.
 
 Skip it only when the service is unavailable or the user explicitly opts out for the request or session.
-When it is unavailable, say so before falling back. For questions about the current repository, use RAG
-first when search is required, then inspect the checkout directly because local files are the source of
-truth. Never index private or user-supplied material into a shared corpus without authorization.
+When it is unavailable, say so before falling back. A question about the current repository is no exception:
+retrieve first, then inspect the checkout directly because local files are the source of truth, and say when
+no passage applies. Never index private or user-supplied material into a shared corpus without authorization.
+
+**The tool picks the specialist.** Before bringing in a research role or specialist, call the tool's
+`pipeline__profile_route` with the question, and use only the research roles and the specialist it
+returns, following its guidance. When it names no specialist, the lead answers without one. Building roles
+are chosen by the kind of task, and the user can always name a role.
 
 ## Specialist roles
 

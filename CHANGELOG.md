@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10.0 (2026-10-28)
+
+- Retrieval first, for every question: the rule in `AGENTS.md`, `COORDINATION.md` and the block template now
+  covers every question or task in any assistant, including questions about the repository's own code
+  (retrieve, then inspect the checkout), instead of applying only before a search. The retrieval tool also
+  picks the specialist: the lead calls `pipeline__profile_route` and brings in only the research roles and
+  specialist it returns. Building roles are still chosen by the kind of task.
+
 ## v0.9.0 (2026-10-22)
 
 - Adds an optional local research checkout setting for private profiles. Each profile receives its own

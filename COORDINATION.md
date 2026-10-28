@@ -38,18 +38,25 @@ applies that role in the current session:
 | `analyst` | data analysis and statistics |
 | `science-writer` | papers and blog posts |
 
-## Retrieval before search
+## Retrieval first, for every question
 
-The lead and every specialist use the configured Scientific Research RAG MCP backed by
+Every question or task the lead or any specialist handles, in any assistant, starts with the configured
+Scientific Research RAG MCP backed by
 [`polarizetech/retrieval-augmented-generation`](https://github.com/polarizetech/retrieval-augmented-generation)
-before any literature, web, corpus, or other search, and ground the result in retrieved passages. Depending
-on the client, the server may appear as `scientific_research_rag` or `research-rag`.
+before answering and before any literature, web, corpus, or other search, and the result is grounded in
+retrieved passages. Depending on the client, the server may appear as `scientific_research_rag` or
+`research-rag`.
 
 There are two exceptions: the service is unavailable, or the user explicitly opts out for the request or
 session. An unavailable service is disclosed before another search method is used. Repository-local code and
-files remain authoritative for their own current contents, so a code task inspects the checkout after the
-RAG-first step rather than treating an index as current. Private or user-supplied material is not indexed
-into a shared corpus without authorization.
+files remain authoritative for their own current contents, so a code task still retrieves first and then
+inspects the checkout rather than treating an index as current. Private or user-supplied material is not
+indexed into a shared corpus without authorization.
+
+The same tool decides which specialists join: the lead calls `pipeline__profile_route` with the question and
+brings in only the research roles and the specialist it returns, following its guidance; with no specialist
+named, the lead answers alone. Building roles are chosen by the kind of task, and the user can always name a
+role.
 
 ## Handoffs: how agents talk
 
