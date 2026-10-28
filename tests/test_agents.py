@@ -36,13 +36,13 @@ class Briefs(unittest.TestCase):
         self.assertIn("provider-neutral role brief", instructions)
         self.assertIn("Python 3.9+", instructions)
 
-    def test_every_agent_inherits_retrieval_before_search(self):
+    def test_every_agent_inherits_retrieval_first(self):
         expected = (
             "polarizetech/retrieval-augmented-generation",
             "before any literature, web, corpus, or other search",
             "service is unavailable",
             "user explicitly",
-            "Local filesystem" ,
+            "source of truth",
         )
         instructions = (ROOT / "AGENTS.md").read_text()
         for phrase in expected:
@@ -58,6 +58,12 @@ class Briefs(unittest.TestCase):
             self.assertIn("explicitly opts out", text)
             self.assertIn("checkout", text)
             self.assertIn("without authorization", text)
+
+        for text in (instructions, template, coordination):
+            self.assertIn("Retrieval first, for every question", text)
+            self.assertIn("Every question or task", text)
+            self.assertIn("`pipeline__profile_route`", text)
+            self.assertNotIn("Retrieval before search", text)
 
     def test_interface_profiles_share_design_and_app_architecture(self):
         designer = (ROOT / "agents" / "designer.md").read_text()

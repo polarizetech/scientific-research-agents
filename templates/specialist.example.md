@@ -20,7 +20,7 @@ the evidence. Name those boundaries explicitly.
 
 ## Evidence and method
 
-Follow the repository's retrieval-before-search rule. Retrieve passages for scientific claims, record
+Follow the repository's retrieval-first rule. Retrieve passages for scientific claims, record
 evidence IDs and read depth, and check quotations and numbers before updating a claim. Explain the
 measurement, the inference, and the main alternative explanation separately.
 
