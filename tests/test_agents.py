@@ -166,6 +166,35 @@ class Extensions(unittest.TestCase):
             self.assertEqual(routing.count("<!-- scientific-research-agent-extensions:start -->"), 1)
             self.assertIn("`.claude/agents/bee.md`", routing)
 
+    def test_a_reference_brief_installs_from_its_source_repository(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "private"
+            (source / "agents").mkdir(parents=True)
+            (source / "agents" / "scribe.md").write_text(
+                "---\nname: scribe\nextends: researcher\nsource: ../study/agents/scribe.md\n"
+                "source_repo: org/study\n---\n\nMaintained in the study.\n")
+            target = root / "study"
+            (target / "agents").mkdir(parents=True)
+            (target / "agents/scribe.md").write_text(
+                "---\nname: scribe\ndescription: Translate scripts in {{name}}.\n"
+                "extends: researcher\nmodel: {{model}}\neffort: {{effort}}\n---\n\nKeep every meaning.\n")
+            (target / ".claude/agents").mkdir(parents=True)
+            (target / ".claude/agents/researcher.md").write_text(
+                "---\nname: researcher\ndescription: General research.\nmodel: sonnet\n"
+                "effort: medium\n---\n\nVerify evidence first.\n")
+            command = ["python3", str(ROOT / "bin/install-agent-extensions"), "--source", str(source),
+                       "--target", str(target), "--profile", "scribe"]
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            installed = (target / ".claude/agents/scribe.md").read_text()
+            self.assertIn("Keep every meaning.", installed)
+            self.assertNotIn("Maintained in the study.", installed)
+            (target / "agents/scribe.md").unlink()
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("org/study", result.stderr)
+
     def test_profile_research_folders_are_created_and_existing_notes_are_preserved(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

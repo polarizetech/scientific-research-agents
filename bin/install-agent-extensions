@@ -50,6 +50,22 @@ def split_brief(path):
     return fields, match.group(2).strip()
 
 
+def resolve_reference(path):
+    """A brief whose frontmatter names a `source` is a reference to a brief another repository maintains
+    (a path relative to the overlay checkout). Return the referenced file, or the brief itself."""
+    fields, _ = split_brief(path)
+    if "source" not in fields:
+        return path
+    source = (path.parent.parent / Path(fields["source"]).expanduser()).resolve()
+    if not source.is_file():
+        fail("{}: referenced source {} is missing; clone {} next to it".format(
+            path, source, fields.get("source_repo", "its repository")))
+    target_fields, _ = split_brief(source)
+    if target_fields.get("name") != fields.get("name"):
+        fail("{}: referenced brief {} has a different name".format(path, source))
+    return source
+
+
 def render(content, values, where):
     def replace(match):
         key = match.group(1)
@@ -126,6 +142,7 @@ def install(args):
                    "effort": args.effort or values["effort"] or base_fields.get("effort", ""),
                    "corpus_repo": args.corpus_repo or values["corpus_repo"],
                    "agents_ref": args.agents_ref or values["agents_ref"]})
+    available = {name: resolve_reference(path) if name in names else path for name, path in available.items()}
     prepared = []
     for name in names:
         fields, body = split_brief(available[name])
