@@ -54,6 +54,27 @@ For a new specialist, give the file and frontmatter the same unique kebab-case n
 from inference. The source brief is an extension, so it can focus on the specialty while the public
 researcher brief supplies shared research rules.
 
+## A profile maintained in another repository
+
+A profile can live in the study or tool it serves and still be listed in the private overlay. The overlay
+then holds a short reference instead of a copy:
+
+```markdown
+---
+name: aramaic-translator
+extends: researcher
+source: ../aramaic-alphabet/agents/aramaic-translator.md
+source_repo: polarizetech/aramaic-alphabet
+---
+
+Maintained in polarizetech/aramaic-alphabet; edit it there.
+```
+
+`source` is a path relative to the overlay checkout, so the source repository must be cloned beside it. The
+installer reads the referenced brief (its name must match) and installs it as usual; if the file is missing
+it stops and names `source_repo`. The research tool's profile router follows the same field and skips a
+reference whose source is absent.
+
 ## Publishing checks
 
 Run `python3 -m unittest discover -v tests` for changes to this starter set. Check `git status --short`
