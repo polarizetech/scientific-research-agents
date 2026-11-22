@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.11.0 (2026-11-22)
+
+- The designer works in MVP mode on exploratory work (a study's `mode = "exploratory"`, a unit's
+  `stage = "exploratory"`, or a scope's `Tier: explore`): one quick pass that designs and builds the page from
+  the design system's existing components and tokens, aiming for a workable page within about an hour, with
+  no Claude Design, separate mockup, audit or hand-off. Its numbers, labels and methods still come from
+  established papers. Past exploratory, it does the full pass: a Claude Design or mockup handed to the
+  frontend-developer.
+- An extension brief can reference a profile kept in another repository (#5).
+
 ## v0.10.0 (2026-10-28)
 
 - Retrieval first, for every question: the rule in `AGENTS.md`, `COORDINATION.md` and the block template now
