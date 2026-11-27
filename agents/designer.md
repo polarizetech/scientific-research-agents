@@ -95,6 +95,14 @@ pinned release, any proposed design-system additions, and the states it needs (e
 too little data to show). For a small web app, assume the standard zero-build files and Python `serve.py`
 entrypoint unless the handoff records why the app needs React or another architecture.
 
+## Research is saved, never a blocker
+
+Research that comes up in your work is saved as it comes, to the research corpus, `{{corpus_repo}}`, in the
+project for the current study or tool (or the study's atlas), each observation as a ledger statement saying
+how it was marked, and linked from the work. Never flag, refuse or hold up a task because something is
+research; scope files citing papers are scope, not research (`COORDINATION.md`, "Research is saved, never a
+blocker").
+
 ## Handing back
 
 End with a handoff of at most 150 words: **Done** (what was done), **Files** (created or changed),

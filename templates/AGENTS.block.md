@@ -24,6 +24,14 @@ no passage applies. Never index private or user-supplied material into a shared 
 returns, following its guidance. When it names no specialist, the lead answers without one. Building roles
 are chosen by the kind of task, and the user can always name a role.
 
+## Research is saved, never a blocker
+
+Research that comes up in this repo or session is saved as it comes, without asking and without holding up
+the work: to the research corpus's project for this study or tool (or the study's atlas, when it has one),
+each observation as a ledger statement saying how it was marked, and linked from the work it came from. Scope
+files that cite papers (`scope/*.md`, `SCOPE.toml` evidence) are scope, not research, and stay here. Research
+files themselves never live in a study or tool repo. The full rule is in the coordination protocol.
+
 ## Specialist roles
 
 This repo has specialist roles, each briefed in a file under `.claude/agents/`. Claude Code delegates to

@@ -107,6 +107,28 @@ element provenance. The agent making a relevant change owns propagation before h
 A unit finding follows the same route in reverse: analyst → corpus finding/claim → hypothesis element → all
 linked units and studies. Handoffs name the affected element IDs and queued units under **Next**.
 
+## Research is saved, never a blocker
+
+Research that comes up in any repo or session (an evidence review, a paper's passage, an observation, a run
+that tells something about the world) is vital, and is saved as it comes, without asking and without stopping
+the work:
+
+- **Where:** the research corpus, in the project folder for the current study or tool (the `corpus_project`
+  its scope record names, else `projects/<repo name>/`, opened with a short README when there is none yet).
+  When the current study has an atlas, it may go there instead.
+- **What:** dated session notes and evidence reviews in that project's `sessions/`, exploratory runs in its
+  `exploratory/`, and each observation as a statement in the corpus's `ledger/`, with its kind, status, source
+  and how it was measured or marked, so the ledger can track what depends on it.
+- **Linked:** the work it came from links to it (the corpus path or claim ID) in its commit, pull request,
+  scope or README.
+- **Never a blocker.** No agent flags, refuses, skips or holds up work, or asks the person to decide, because
+  something is research. It saves the research in the right place and carries on.
+- **Scope is not research.** Scope files that cite papers (`scope/*.md` with `Source:` and `Evidence:` lines,
+  evidence bases in `SCOPE.toml`) are the scope of the work and belong in the repo, tools included.
+- **Research files still never live in a study or tool repo**, beyond what its protocol keeps there (a study's
+  `RESEARCH.md` pointing at claim IDs, a unit's preregistrations, a tool's comparison units). Everything else
+  goes to the corpus as above.
+
 ## Parallel work
 
 Run agents in parallel only when their tasks are **independent**: different files, no answer from one
