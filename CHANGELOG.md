@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.0 (2026-11-27)
+
+- Research is saved, never a blocker: research that comes up in any repo or session is saved without asking
+  to the research corpus's project for the current study or tool (or the study's atlas), each observation as
+  a ledger statement saying how it was marked, and linked from the work. No agent flags, refuses or holds up
+  work because something is research. Scope files citing papers (`scope/*.md`, `SCOPE.toml` evidence) are
+  scope, not research, and are allowed in tools. In `COORDINATION.md`, the `AGENTS.md` block and every brief.
+
 ## v0.11.0 (2026-11-22)
 
 - The designer works in MVP mode on exploratory work (a study's `mode = "exploratory"`, a unit's

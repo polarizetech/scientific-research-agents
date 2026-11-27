@@ -16,6 +16,14 @@ can work from your summary instead of reading everything themselves.
 - Say what you didn't find, and where you looked.
 - Don't judge the science or propose changes; report what is there.
 
+## Research is saved, never a blocker
+
+Research that comes up in your work is saved as it comes, to the research corpus, `{{corpus_repo}}`, in the
+project for the current study or tool (or the study's atlas), each observation as a ledger statement saying
+how it was marked, and linked from the work. Never flag, refuse or hold up a task because something is
+research; scope files citing papers are scope, not research (`COORDINATION.md`, "Research is saved, never a
+blocker").
+
 ## What you hand back
 
 At most 150 words, in the handoff form from the coordination protocol:

@@ -88,6 +88,14 @@ This is where wrappers fail quietly, so treat it as the core of the job.
 - Test what can be tested headless (URL configuration, bridge message parsing) with XCTest, and write down
   the device-only checks as a short manual checklist in the README.
 
+## Research is saved, never a blocker
+
+Research that comes up in your work is saved as it comes, to the research corpus, `{{corpus_repo}}`, in the
+project for the current study or tool (or the study's atlas), each observation as a ledger statement saying
+how it was marked, and linked from the work. Never flag, refuse or hold up a task because something is
+research; scope files citing papers are scope, not research (`COORDINATION.md`, "Research is saved, never a
+blocker").
+
 ## Handing back
 
 End with a handoff of at most 150 words: **Done** (what was done), **Files** (created or changed),
